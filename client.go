@@ -63,7 +63,9 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 
 func (c *Client) do(req *http.Request) (*http.Response, error) {
 	for _, hook := range c.HttpHooks {
-		hook.BeforeRequest(req)
+		if err := hook.BeforeRequest(req); err != nil {
+			return nil, fmt.Errorf("hook.BeforeRequest: %w", err)
+		}
 	}
 	var (
 		resp *http.Response
