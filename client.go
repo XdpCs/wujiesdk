@@ -63,7 +63,9 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 
 func (c *Client) do(req *http.Request) (*http.Response, error) {
 	for _, hook := range c.HttpHooks {
-		hook.BeforeRequest(req)
+		if err := hook.BeforeRequest(req); err != nil {
+			return nil, fmt.Errorf("hook.BeforeRequest: %w", err)
+		}
 	}
 	var (
 		resp *http.Response
@@ -124,7 +126,7 @@ func (c *Client) LoggerHTTPReq(req *http.Request) {
 	logBuffer.WriteString(fmt.Sprintf("Host:%s\t", req.URL.Host))
 	logBuffer.WriteString(fmt.Sprintf("Path:%s\t", req.URL.Path))
 	logBuffer.WriteString(fmt.Sprintf("Query:%s\t", req.URL.RawQuery))
-	logBuffer.WriteString(fmt.Sprintf("Header info:"))
+	logBuffer.WriteString("Header info:")
 
 	for k, v := range req.Header {
 		var valueBuffer bytes.Buffer
@@ -143,7 +145,7 @@ func (c *Client) LoggerHTTPReq(req *http.Request) {
 func (c *Client) LoggerHTTPResp(req *http.Request, resp *http.Response) {
 	var logBuffer bytes.Buffer
 	logBuffer.WriteString(fmt.Sprintf("[Resp:%p]StatusCode:%d\t", req, resp.StatusCode))
-	logBuffer.WriteString(fmt.Sprintf("Header info:"))
+	logBuffer.WriteString("Header info:")
 	for k, v := range resp.Header {
 		var valueBuffer bytes.Buffer
 		for j := 0; j < len(v); j++ {
