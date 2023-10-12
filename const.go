@@ -6,6 +6,7 @@ package wujiesdk
 // @Update       XdpCs 2023-10-10 20:47
 
 import (
+	"fmt"
 	"time"
 
 	"errors"
@@ -58,57 +59,63 @@ const TraceID string = "TRACE_ID"
 type WujieCode string
 
 const (
-	OK                                  WujieCode = "200"
-	InvalidParameter                    WujieCode = "20010001"
-	UnsupportedResolution               WujieCode = "20010015"
-	LockRaceCondition                   WujieCode = "20010018"
-	PromptTranslationFailed             WujieCode = "20110000"
-	PromptContainsSensitiveWords        WujieCode = "20110001"
-	InitImageLinkIncorrectOrUnsupported WujieCode = "20110002"
-	InitImageContainsSensitiveInfo      WujieCode = "20110003"
-	InsufficientPointsBalance           WujieCode = "20110010"
-	CheckResources                      WujieCode = "20110017"
-	ImageRecognitionAbnormality         WujieCode = "20110018"
-	NoFaceOrFaceIsSmall                 WujieCode = "20110019"
-	MultipleFacesDetected               WujieCode = "20110020"
-	SideFaceDetected                    WujieCode = "20110021"
+	ErrorWujieCode                               WujieCode = "0"
+	OKWujieCode                                  WujieCode = "200"
+	InvalidParameterWujieCode                    WujieCode = "20010001"
+	UnsupportedResolutionWujieCode               WujieCode = "20010015"
+	LockRaceConditionWujieCode                   WujieCode = "20010018"
+	PromptTranslationFailedWujieCode             WujieCode = "20110000"
+	PromptContainsSensitiveWordsWujieCode        WujieCode = "20110001"
+	InitImageLinkIncorrectOrUnsupportedWujieCode WujieCode = "20110002"
+	InitImageContainsSensitiveInfoWujieCode      WujieCode = "20110003"
+	InsufficientPointsBalanceWujieCode           WujieCode = "20110010"
+	JobNotInQueueAndCannotCancelWujieCode        WujieCode = "20110011"
+	CheckResourcesWujieCode                      WujieCode = "20110017"
+	ImageRecognitionAbnormalityWujieCode         WujieCode = "20110018"
+	NoFaceOrFaceIsSmallWujieCode                 WujieCode = "20110019"
+	MultipleFacesDetectedWujieCode               WujieCode = "20110020"
+	SideFaceDetectedWujieCode                    WujieCode = "20110021"
 )
 
 func (w WujieCode) String() string {
 	switch w {
-	case InvalidParameter:
+	case InvalidParameterWujieCode:
 		return "非法参数"
-	case UnsupportedResolution:
+	case UnsupportedResolutionWujieCode:
 		return "暂时无法支持的尺寸/分辨率"
-	case LockRaceCondition:
+	case LockRaceConditionWujieCode:
 		return "由锁竞争导致的作画失败（需要重新发起）"
-	case PromptTranslationFailed:
+	case PromptTranslationFailedWujieCode:
 		return "文本语言翻译失败"
-	case PromptContainsSensitiveWords:
+	case PromptContainsSensitiveWordsWujieCode:
 		return "画面描述含有敏感词"
-	case InitImageLinkIncorrectOrUnsupported:
+	case InitImageLinkIncorrectOrUnsupportedWujieCode:
 		return "底图链接信息有误或不支持"
-	case InitImageContainsSensitiveInfo:
+	case InitImageContainsSensitiveInfoWujieCode:
 		return "参考图含有敏感信息"
-	case InsufficientPointsBalance:
+	case InsufficientPointsBalanceWujieCode:
 		return "积分余额不足"
-	case CheckResources:
+	case CheckResourcesWujieCode:
 		return "检测资源"
-	case ImageRecognitionAbnormality:
+	case ImageRecognitionAbnormalityWujieCode:
 		return "图片识别异常"
-	case NoFaceOrFaceIsSmall:
+	case NoFaceOrFaceIsSmallWujieCode:
 		return "未检测到人脸或人脸太小"
-	case MultipleFacesDetected:
+	case MultipleFacesDetectedWujieCode:
 		return "检测到多张人脸"
-	case SideFaceDetected:
+	case SideFaceDetectedWujieCode:
 		return "检测到侧脸"
+	case JobNotInQueueAndCannotCancelWujieCode:
+		return "该作品不在排队中，无法撤销"
+	case ErrorWujieCode:
+		return "非无界报错返回"
 	default:
-		return "未知错误"
+		return fmt.Sprintf("code: %v 未知错误", string(w))
 	}
 }
 
 func (w WujieCode) Err() error {
-	if w != OK {
+	if w != OKWujieCode {
 		return errors.New(w.String())
 	}
 	return nil

@@ -73,19 +73,17 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 	)
 
 	for i := 0; i < c.MaxRetryTimes; i++ {
-		needRetry := false
 		resp, err = c.httpClient.Do(req)
+		if err != nil {
+			err = fmt.Errorf("c.httpClient.Do error: %v", err)
+			continue
+		}
 		if resp.StatusCode < http.StatusOK || resp.StatusCode > 299 {
-			if resp.StatusCode == http.StatusInternalServerError {
-				needRetry = true
-			}
 			err = fmt.Errorf("http status code: %d, %s, trace_id: %v", resp.StatusCode,
 				http.StatusText(resp.StatusCode), getTraceID(resp))
+			continue
 		}
-
-		if needRetry {
-			break
-		}
+		break
 	}
 	if err != nil {
 		c.LoggerHTTPReq(req)
@@ -138,7 +136,7 @@ func (c *Client) LoggerHTTPReq(req *http.Request) {
 		}
 		logBuffer.WriteString(fmt.Sprintf("\t%s:%s", k, valueBuffer.String()))
 	}
-	c.WriteLog(Error, "%s\n", logBuffer.String())
+	c.WriteLog(LogError, "%s\n", logBuffer.String())
 }
 
 // LoggerHTTPResp Print Response to http request
@@ -156,7 +154,7 @@ func (c *Client) LoggerHTTPResp(req *http.Request, resp *http.Response) {
 		}
 		logBuffer.WriteString(fmt.Sprintf("\t%s:%s", k, valueBuffer.String()))
 	}
-	c.WriteLog(Error, "%s\n", logBuffer.String())
+	c.WriteLog(LogError, "%s\n", logBuffer.String())
 }
 
 func (c *Client) AvailableIntegralBalance(ctx context.Context) (*http.Response, error) {
