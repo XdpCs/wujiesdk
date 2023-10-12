@@ -475,6 +475,10 @@ type CancelImageRequest struct {
 	Key string `json:"key"`
 }
 
+func NewCancelImageRequest(key string) *CancelImageRequest {
+	return &CancelImageRequest{Key: key}
+}
+
 func (c *CancelImageRequest) String() string {
 	return fmt.Sprintf("%+v", *c)
 }
@@ -612,12 +616,16 @@ func (c *CreateImageProRequest) String() string {
 
 type CreateImageProResponse struct {
 	BaseResponse
-	Data struct {
-		Results []struct {
-			Key            string `json:"key"`
-			ExpectedSecond int    `json:"expected_second"`
-		} `json:"results"`
-	} `json:"data"`
+	Data CreateImageProData `json:"data"`
+}
+
+type CreateImageProData struct {
+	Results []CreateImageProResult `json:"results"`
+}
+
+type CreateImageProResult struct {
+	Key            string `json:"key"`
+	ExpectedSecond int    `json:"expected_second"`
 }
 
 type GeneratingInfoProRequest struct {
@@ -630,21 +638,25 @@ func (g *GeneratingInfoProRequest) String() string {
 
 type GeneratingInfoProResponse struct {
 	BaseResponse
-	Data struct {
-		Infos []struct {
-			Key             string  `json:"key"`
-			Status          int     `json:"status"`
-			PictureUrl      string  `json:"picture_url"`
-			ExpectedSeconds int     `json:"expected_seconds"`
-			StartGenTime    int     `json:"start_gen_time"`
-			CompleteTime    int     `json:"complete_time"`
-			CompletePercent float64 `json:"complete_percent"`
-			InvolveYellow   int     `json:"involve_yellow"`
-			AuditInfo       string  `json:"audit_info"`
-			FailMessage     struct {
-				FailCode    int    `json:"fail_code"`
-				FailMessage string `json:"fail_message"`
-			} `json:"fail_message"`
-		} `json:"infos"`
-	} `json:"data"`
+	Data GeneratingInfoProData `json:"data"`
+}
+
+type GeneratingInfoProData struct {
+	Infos []GeneratingInfoPro `json:"infos"`
+}
+
+type GeneratingInfoPro struct {
+	Key             string  `json:"key"`
+	Status          int     `json:"status"`
+	PictureUrl      string  `json:"picture_url"`
+	ExpectedSeconds int     `json:"expected_seconds"`
+	StartGenTime    int     `json:"start_gen_time"`
+	CompleteTime    int     `json:"complete_time"`
+	CompletePercent float64 `json:"complete_percent"`
+	InvolveYellow   int     `json:"involve_yellow"`
+	AuditInfo       string  `json:"audit_info"`
+	FailMessage     struct {
+		FailCode    int    `json:"fail_code"`
+		FailMessage string `json:"fail_message"`
+	} `json:"fail_message"`
 }

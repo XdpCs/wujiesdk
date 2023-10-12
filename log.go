@@ -8,10 +8,10 @@ package wujiesdk
 // Define the level of the output log
 const (
 	LogOff = iota
-	Error
-	Warn
-	Info
-	Debug
+	LogError
+	LogWarn
+	LogInfo
+	LogDebug
 )
 
 // LogTag Tag for each level of log
