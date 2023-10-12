@@ -73,7 +73,6 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 	)
 
 	for i := 0; i < c.MaxRetryTimes; i++ {
-		needRetry := true
 		resp, err = c.httpClient.Do(req)
 		if err != nil {
 			err = fmt.Errorf("c.httpClient.Do error: %v", err)
@@ -84,10 +83,7 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 				http.StatusText(resp.StatusCode), getTraceID(resp))
 			continue
 		}
-
-		if needRetry {
-			break
-		}
+		break
 	}
 	if err != nil {
 		c.LoggerHTTPReq(req)
