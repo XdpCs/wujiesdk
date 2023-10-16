@@ -382,16 +382,16 @@ func (c *Client) CancelImage(ctx context.Context, cReq *CancelImageRequest) (*ht
 	return resp, nil
 }
 
-func (c *Client) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (*http.Response, bool, error) {
+func (c *Client) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(AccelerateImageWujieRouter))
 	if err != nil {
-		return nil, false, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AccelerateImageWujieRouter), err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AccelerateImageWujieRouter), err)
 	}
 	resp, err := c.ctxPostJson(ctx, path.String(), nil, aReq)
 	if err != nil {
-		return nil, false, fmt.Errorf("c.CtxJson: req: %v, error: %w", aReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", aReq.String(), err)
 	}
-	return resp, true, nil
+	return resp, nil
 }
 
 func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (*http.Response, error) {

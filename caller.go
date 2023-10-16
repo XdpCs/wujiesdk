@@ -284,23 +284,23 @@ func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (Wuj
 	return code, cResp.Data, nil
 }
 
-func (c *Caller) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (WujieCode, string, error) {
+func (c *Caller) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (WujieCode, bool, error) {
 	resp, err := c.Client.AccelerateImage(ctx, aReq)
 	if err != nil {
-		return ErrorWujieCode, "", fmt.Errorf("c.Client.AccelerateImage: %w", err)
+		return ErrorWujieCode, false, fmt.Errorf("c.Client.AccelerateImage: %w", err)
 	}
 	defer func() { _ = resp.Body.Close() }()
 
 	var aResp AccelerateImageResponse
 	if err := json.NewDecoder(resp.Body).Decode(&aResp); err != nil {
-		return ErrorWujieCode, "", fmt.Errorf("json.NewDecoder: %w", err)
+		return ErrorWujieCode, false, fmt.Errorf("json.NewDecoder: %w", err)
 	}
 	code := WujieCode(aResp.Code)
 	if err := code.Err(); err != nil {
-		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, AccelerateImageRequest: %s",
+		return code, false, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, AccelerateImageRequest: %s",
 			getTraceID(resp), err, aResp.Message, aReq.String())
 	}
-	return code, aResp.Data, nil
+	return code, true, nil
 }
 
 func (c *Caller) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (WujieCode, []CreateImageProResult, error) {
