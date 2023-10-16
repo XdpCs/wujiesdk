@@ -11,6 +11,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -97,6 +98,50 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
+func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, params url.Values, body interface{}) (*http.Response, error) {
+	api = api + "?" + params.Encode()
+	req, err := http.NewRequestWithContext(ctx, httpMethod, api, nil)
+	if err != nil {
+		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", api, err)
+	}
+	if body != nil {
+		data, err := json.Marshal(body)
+		if err != nil {
+			return nil, fmt.Errorf("json.Marshal: marshal body error: %w", err)
+		}
+		req.Body = io.NopCloser(bytes.NewReader(data))
+	}
+	req.Header.Set(ContentType, ApplicationJson)
+	return c.do(req)
+}
+
+func (c *Client) ctxPostJson(ctx context.Context, api string, params url.Values, body interface{}) (*http.Response, error) {
+	return c.ctxJson(ctx, http.MethodPost, api, params, body)
+}
+
+func (c *Client) ctxGetJson(ctx context.Context, api string, params url.Values) (*http.Response, error) {
+	return c.ctxJson(ctx, http.MethodGet, api, params, nil)
+}
+
+func (c *Client) ctxForm(ctx context.Context, httpMethod string, api string, params url.Values) (*http.Response, error) {
+	api = api + "?" + params.Encode()
+	req, err := http.NewRequestWithContext(ctx, httpMethod, api, nil)
+	req.PostForm = params
+	if err != nil {
+		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", api, err)
+	}
+	req.Header.Set(ContentType, ApplicationFormUrlencodedUTF8)
+	return c.do(req)
+}
+
+//func (c *Client) ctxPostForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
+//	return c.ctxForm(ctx, http.MethodPost, api, params)
+//}
+
+func (c *Client) ctxGetForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
+	return c.ctxForm(ctx, http.MethodGet, api, params)
+}
+
 func (c *Client) HTTPClient() *http.Client {
 	return c.httpClient
 }
@@ -162,12 +207,11 @@ func (c *Client) AvailableIntegralBalance(ctx context.Context) (*http.Response, 
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AvailableIntegralBalanceWujieRouter), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path.String(), nil)
+	resp, err := c.ctxGetForm(ctx, path.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("c.ctxGetForm: error: %w", err)
 	}
-	req.Header.Set(ContentType, ApplicationFormUrlencodedUTF8)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) (*http.Response, error) {
@@ -175,16 +219,11 @@ func (c *Client) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) 
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ExchangePointWujieRouter), err)
 	}
-	data, err := json.Marshal(eReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, eReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", eReq.String(), err)
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", eReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) ModelBaseInfos(ctx context.Context) (*http.Response, error) {
@@ -192,12 +231,11 @@ func (c *Client) ModelBaseInfos(ctx context.Context) (*http.Response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ModelBaseInfosWujieRouter), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path.String(), nil)
+	resp, err := c.ctxGetForm(ctx, path.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("c.ctxGetForm: error: %w", err)
 	}
-	req.Header.Set(ContentType, ApplicationFormUrlencodedUTF8)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) DefaultResourceStyleModel(ctx context.Context) (*http.Response, error) {
@@ -205,29 +243,26 @@ func (c *Client) DefaultResourceStyleModel(ctx context.Context) (*http.Response,
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(DefaultResourceStyleModelWujieRouter), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path.String(), nil)
+	resp, err := c.ctxGetForm(ctx, path.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("c.ctxGetForm: error: %w", err)
 	}
-	req.Header.Set(ContentType, ApplicationFormUrlencodedUTF8)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) DefaultResourceModel(ctx context.Context, model int32) (*http.Response, error) {
 	values := url.Values{
 		"model": []string{fmt.Sprintf("%d", model)},
 	}
-	rawURL := Domain + string(DefaultResourceModelWujieRouter) + "?" + values.Encode()
-	path, err := url.Parse(rawURL)
+	path, err := url.Parse(Domain + string(DefaultResourceModelWujieRouter))
 	if err != nil {
-		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", rawURL, err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(DefaultResourceModelWujieRouter), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path.String(), nil)
+	resp, err := c.ctxGetForm(ctx, path.String(), values)
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("c.ctxGetForm: req: %v, error: %w", model, err)
 	}
-	req.Header.Set(ContentType, ApplicationFormUrlencodedUTF8)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) CreateImage(ctx context.Context, cReq *CreateImageRequest) (*http.Response, error) {
@@ -235,16 +270,11 @@ func (c *Client) CreateImage(ctx context.Context, cReq *CreateImageRequest) (*ht
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateImageWujieRouter), err)
 	}
-	data, err := json.Marshal(cReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", cReq.String(), err)
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", cReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest) (*http.Response, error) {
@@ -252,33 +282,26 @@ func (c *Client) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(GeneratingInfoWujieRouter), err)
 	}
-	data, err := json.Marshal(gReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, gReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", gReq.String(), err)
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", gReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) ImageInfo(ctx context.Context, key string) (*http.Response, error) {
 	values := url.Values{
 		"key": []string{key},
 	}
-	rawURL := Domain + string(ImageInfoWujieRouter) + "?" + values.Encode()
-	path, err := url.Parse(rawURL)
+	path, err := url.Parse(Domain + string(ImageInfoWujieRouter))
 	if err != nil {
-		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", rawURL, err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageInfoWujieRouter), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path.String(), nil)
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", key, err)
 	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) ImagePriceInfo(ctx context.Context, iReq *ImagePriceInfoRequest) (*http.Response, error) {
@@ -286,16 +309,11 @@ func (c *Client) ImagePriceInfo(ctx context.Context, iReq *ImagePriceInfoRequest
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImagePriceInfoWujieRouter), err)
 	}
-	data, err := json.Marshal(iReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, iReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", iReq.String(), err)
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", iReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) PostSuperSize(ctx context.Context, sReq *PostSuperSizeRequest) (*http.Response, error) {
@@ -303,33 +321,53 @@ func (c *Client) PostSuperSize(ctx context.Context, sReq *PostSuperSizeRequest) 
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(SuperSizeWujieRouter), err)
 	}
-	data, err := json.Marshal(sReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, sReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", sReq.String(), err)
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", sReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) GetSuperSize(ctx context.Context, keys []string) (*http.Response, error) {
 	values := url.Values{
 		"key": keys,
 	}
-	rawURL := Domain + string(SuperSizeWujieRouter) + "?" + values.Encode()
-	path, err := url.Parse(rawURL)
+	path, err := url.Parse(Domain + string(SuperSizeWujieRouter))
 	if err != nil {
-		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", rawURL, err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(SuperSizeWujieRouter), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path.String(), nil)
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", keys, err)
 	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
+}
+
+func (c *Client) CreateParams(ctx context.Context, pReq *CreateParamsRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateParamsWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateParamsWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, pReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", pReq.String(), err)
+	}
+	return resp, nil
+}
+
+func (c *Client) ImageModelQueueInfo(ctx context.Context, model int32) (*http.Response, error) {
+	values := url.Values{
+		"model": []string{fmt.Sprintf("%d", model)},
+	}
+	path, err := url.Parse(Domain + string(ImageModelQueueInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageModelQueueInfoWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", model, err)
+	}
+	return resp, nil
 }
 
 func (c *Client) CancelImage(ctx context.Context, cReq *CancelImageRequest) (*http.Response, error) {
@@ -337,16 +375,23 @@ func (c *Client) CancelImage(ctx context.Context, cReq *CancelImageRequest) (*ht
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CancelImageWujieRouter), err)
 	}
-	data, err := json.Marshal(cReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", cReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", cReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
+	return resp, nil
+}
+
+func (c *Client) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(AccelerateImageWujieRouter))
 	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AccelerateImageWujieRouter), err)
 	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, aReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", aReq.String(), err)
+	}
+	return resp, nil
 }
 
 func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (*http.Response, error) {
@@ -354,16 +399,11 @@ func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateImageProWujieRouter), err)
 	}
-	data, err := json.Marshal(cReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", cReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", cReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
 
 func (c *Client) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProRequest) (*http.Response, error) {
@@ -371,14 +411,9 @@ func (c *Client) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProR
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(GeneratingInfoProWujieRouter), err)
 	}
-	data, err := json.Marshal(gReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, gReq)
 	if err != nil {
-		return nil, fmt.Errorf("json.Marshal: req: %v, marshal req error: %w", gReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", gReq.String(), err)
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path.String(), bytes.NewReader(data))
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", path.String(), err)
-	}
-	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return resp, nil
 }
