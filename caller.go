@@ -227,6 +227,44 @@ func (c *Caller) GetSuperSize(ctx context.Context, keys []string) (WujieCode, []
 	return code, gResp.Data, nil
 }
 
+func (c *Caller) CreateParams(ctx context.Context, cReq *CreateParamsRequest) (WujieCode, []CreateParams, error) {
+	resp, err := c.Client.CreateParams(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateParams: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateParamsResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateParamsRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, cResp.Data, nil
+}
+
+func (c *Caller) ImageModelQueueInfo(ctx context.Context, model int32) (WujieCode, *ImageModelQueueInfoData, error) {
+	resp, err := c.Client.ImageModelQueueInfo(ctx, model)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.ImageModelQueueInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var iResp ImageModelQueueInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&iResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(iResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, ImageModelQueueInfoRequest: %v",
+			getTraceID(resp), err, iResp.Message, model)
+	}
+	return code, &iResp.Data, nil
+}
+
 func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (WujieCode, string, error) {
 	resp, err := c.Client.CancelImage(ctx, cReq)
 	if err != nil {
@@ -244,6 +282,25 @@ func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (Wuj
 			getTraceID(resp), err, cResp.Message, cReq.String())
 	}
 	return code, cResp.Data, nil
+}
+
+func (c *Caller) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (WujieCode, string, error) {
+	resp, err := c.Client.AccelerateImage(ctx, aReq)
+	if err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("c.Client.AccelerateImage: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var aResp AccelerateImageResponse
+	if err := json.NewDecoder(resp.Body).Decode(&aResp); err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(aResp.Code)
+	if err := code.Err(); err != nil {
+		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, AccelerateImageRequest: %s",
+			getTraceID(resp), err, aResp.Message, aReq.String())
+	}
+	return code, aResp.Data, nil
 }
 
 func (c *Caller) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (WujieCode, []CreateImageProResult, error) {

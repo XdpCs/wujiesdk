@@ -471,6 +471,79 @@ type SuperSizeInfo struct {
 	Duration int     `json:"duration"`
 }
 
+type CreateParamsRequest struct {
+	Key []string `json:"key"`
+}
+
+func (c *CreateParamsRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateParamsResponse struct {
+	BaseResponse
+	Data []CreateParams `json:"data"`
+}
+
+type CreateParams struct {
+	Key                      string  `json:"key"`
+	ArtworkUrl               string  `json:"artwork_url"`
+	Model                    int     `json:"model"`
+	ModelAsString            string  `json:"model_as_string"`
+	ModelCode                int     `json:"model_code"`
+	ModelCodeAsString        string  `json:"model_code_as_string"`
+	Pattern                  string  `json:"pattern"`
+	Prompt                   string  `json:"prompt"`
+	UcPrompt                 string  `json:"uc_prompt"`
+	CreativityDegree         int     `json:"creativity_degree"`
+	CreativityDegreeAsString string  `json:"creativity_degree_as_string"`
+	InitImageUrl             string  `json:"init_image_url"`
+	InitWidth                int     `json:"init_width"`
+	InitWidthAsString        string  `json:"init_width_as_string"`
+	InitHeight               int     `json:"init_height"`
+	InitHeightAsString       string  `json:"init_height_as_string"`
+	PretreatmentMethod       string  `json:"pretreatment_method"`
+	MaskImageUrl             string  `json:"mask_image_url"`
+	MaskZoneImageUrl         string  `json:"mask_zone_image_url"`
+	Size                     string  `json:"size"`
+	Nature                   int     `json:"nature"`
+	NatureAsString           string  `json:"nature_as_string"`
+	PromptOptimize           int     `json:"prompt_optimize"`
+	PromptOptimizeAsString   string  `json:"prompt_optimize_as_string"`
+	StyleDecoration          string  `json:"style_decoration"`
+	Character                string  `json:"character"`
+	ModelFusion              string  `json:"model_fusion"`
+	StyleModel               string  `json:"style_model"`
+	ResolutionInfo           string  `json:"resolution_info"`
+	Steps                    int     `json:"steps"`
+	StepsAsString            string  `json:"steps_as_string"`
+	Cfg                      float64 `json:"cfg"`
+	CfgAsString              string  `json:"cfg_as_string"`
+	SamplerIndex             string  `json:"sampler_index"`
+	Seed                     string  `json:"seed"`
+	SuperType                int     `json:"super_type"`
+	SuperTypeAsString        string  `json:"super_type_as_string"`
+	ChatGptOptimize          bool    `json:"chat_gpt_optimize"`
+	ChatGptOptimizeAsString  string  `json:"chat_gpt_optimize_as_string"`
+	ClipSkip                 int     `json:"clip_skip"`
+	ClipSkipAsString         string  `json:"clip_skip_as_string"`
+	Ensd                     float64 `json:"ensd"`
+	EnsdAsString             string  `json:"ensd_as_string"`
+	RepairTheHand            bool    `json:"repair_the_hand"`
+	RepairTheHandAsString    string  `json:"repair_the_hand_as_string"`
+	ConsumedTime             string  `json:"consumed_time"`
+}
+
+type ImageModelQueueInfoResponse struct {
+	BaseResponse
+	Data ImageModelQueueInfoData `json:"data"`
+}
+
+type ImageModelQueueInfoData struct {
+	ExpectedSeconds int `json:"expected_seconds"`
+	QueueNum        int `json:"queue_num"`
+	ReduceTime      int `json:"reduce_time"`
+}
+
 type CancelImageRequest struct {
 	Key string `json:"key"`
 }
@@ -484,6 +557,24 @@ func (c *CancelImageRequest) String() string {
 }
 
 type CancelImageResponse struct {
+	BaseResponse
+	Data string `json:"data"`
+}
+
+type AccelerateImageRequest struct {
+	Key     string `json:"key"`
+	StepNum int    `json:"step_num"`
+}
+
+func NewAccelerateImageRequest(key string, stepNum int) *AccelerateImageRequest {
+	return &AccelerateImageRequest{Key: key, StepNum: stepNum}
+}
+
+func (a *AccelerateImageRequest) String() string {
+	return fmt.Sprintf("%+v", *a)
+}
+
+type AccelerateImageResponse struct {
 	BaseResponse
 	Data string `json:"data"`
 }

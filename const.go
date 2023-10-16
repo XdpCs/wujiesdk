@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-10 20:47
+// @Update       XdpCs 2023-10-16 15:47
 
 import (
 	"fmt"
@@ -22,21 +22,18 @@ const (
 
 // common ai WujieRouter
 const (
-	ModelBaseInfosWujieRouter            WujieRouter = "/ai/model_base_infos"
-	DefaultResourceStyleModelWujieRouter WujieRouter = "/ai/default_resource_style_model"
 	DefaultResourceModelWujieRouter      WujieRouter = "/ai/default_resource"
-	ImagePriceInfoWujieRouter            WujieRouter = "/ai/price_info"
-	CreateImageWujieRouter               WujieRouter = "/ai/create"
+	ModelBaseInfosWujieRouter            WujieRouter = "/ai/model_base_infos"
 	GeneratingInfoWujieRouter            WujieRouter = "/ai/generating_info"
+	CreateParamsWujieRouter              WujieRouter = "/ai/create_params"
 	ImageInfoWujieRouter                 WujieRouter = "/ai/info"
+	ImageModelQueueInfoWujieRouter       WujieRouter = "/ai/model_info"
+	DefaultResourceStyleModelWujieRouter WujieRouter = "/ai/default_resource_style_model"
+	CreateImageWujieRouter               WujieRouter = "/ai/create"
+	AccelerateImageWujieRouter           WujieRouter = "/ai/accelerate"
+	CancelImageWujieRouter               WujieRouter = "/ai/cancel"
+	ImagePriceInfoWujieRouter            WujieRouter = "/ai/price_info"
 	SuperSizeWujieRouter                 WujieRouter = "/ai/supersize"
-)
-
-// image queue
-const (
-	AccelerateWujieRouter  WujieRouter = "/ai/accelerate"
-	CancelImageWujieRouter WujieRouter = "/ai/cancel"
-	ImageModelQueueInfo    WujieRouter = "/ai/model_info"
 )
 
 // pro ai WujieRouter
@@ -68,6 +65,7 @@ const (
 	PromptContainsSensitiveWordsWujieCode        WujieCode = "20110001"
 	InitImageLinkIncorrectOrUnsupportedWujieCode WujieCode = "20110002"
 	InitImageContainsSensitiveInfoWujieCode      WujieCode = "20110003"
+	ImageStatusChange                            WujieCode = "20110009"
 	InsufficientPointsBalanceWujieCode           WujieCode = "20110010"
 	JobNotInQueueAndCannotCancelWujieCode        WujieCode = "20110011"
 	CheckResourcesWujieCode                      WujieCode = "20110017"
@@ -109,6 +107,8 @@ func (w WujieCode) String() string {
 		return "该作品不在排队中，无法撤销"
 	case ErrorWujieCode:
 		return "非无界报错返回"
+	case ImageStatusChange:
+		return "作品状态改变，请刷新后查看"
 	default:
 		return fmt.Sprintf("code: %v 未知错误", string(w))
 	}
