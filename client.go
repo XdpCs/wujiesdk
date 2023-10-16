@@ -134,9 +134,9 @@ func (c *Client) ctxForm(ctx context.Context, httpMethod string, api string, par
 	return c.do(req)
 }
 
-func (c *Client) ctxPostForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
-	return c.ctxForm(ctx, http.MethodPost, api, params)
-}
+//func (c *Client) ctxPostForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
+//	return c.ctxForm(ctx, http.MethodPost, api, params)
+//}
 
 func (c *Client) ctxGetForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
 	return c.ctxForm(ctx, http.MethodGet, api, params)
