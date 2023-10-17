@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        credentials.go
 // @Description  sign request
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-10 20:47
+// @Update       XdpCs 2023-10-17 10:21
 
 import (
 	"crypto"
@@ -20,6 +20,7 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
+// Credentials is the credentials for wujie sdk
 type Credentials struct {
 	AppID         string
 	PrivateKey    string
@@ -27,6 +28,7 @@ type Credentials struct {
 	RsaPrivateKey *rsa.PrivateKey
 }
 
+// Sign sign the request
 func (c *Credentials) Sign(req *http.Request) (*http.Request, error) {
 	auth, found := c.cache.Get(HTTPHeaderAuthorization)
 	if !found {
@@ -74,6 +76,7 @@ func (c *Credentials) sign() (string, error) {
 	return string(auth), nil
 }
 
+// NewCredentials create a new credentials
 func NewCredentials(appID, privateKey string) (*Credentials, error) {
 	c := &Credentials{
 		AppID:      appID,
@@ -93,9 +96,11 @@ func NewCredentials(appID, privateKey string) (*Credentials, error) {
 	return c, nil
 }
 
+// BeforeRequest sign the request
 func (c *Credentials) BeforeRequest(req *http.Request) error {
 	_, err := c.Sign(req)
 	return err
 }
 
+// AfterRequest do nothing
 func (c *Credentials) AfterRequest(_ *http.Response, _ error) {}

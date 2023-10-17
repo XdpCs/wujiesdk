@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-10 20:47
+// @Update       XdpCs 2023-10-17 10:20
 
 import (
 	"bytes"
@@ -25,8 +25,10 @@ type HttpHook interface {
 	AfterRequest(response *http.Response, err error)
 }
 
+// HttpHooks is a slice of HttpHook
 type HttpHooks []HttpHook
 
+// Client is the client for wujie's api
 type Client struct {
 	httpClient    *http.Client // http httpClient
 	MaxRetryTimes int          // max retry times
@@ -54,10 +56,12 @@ func NewDefaultClient(c *Credentials) *Client {
 	return client
 }
 
+// AddHttpHooks add hooks
 func (c *Client) AddHttpHooks(hooks ...HttpHook) {
 	c.HttpHooks = append(c.HttpHooks, hooks...)
 }
 
+// Do do http request
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	return c.do(req)
 }
@@ -134,18 +138,16 @@ func (c *Client) ctxForm(ctx context.Context, httpMethod string, api string, par
 	return c.do(req)
 }
 
-//func (c *Client) ctxPostForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
-//	return c.ctxForm(ctx, http.MethodPost, api, params)
-//}
-
 func (c *Client) ctxGetForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
 	return c.ctxForm(ctx, http.MethodGet, api, params)
 }
 
+// HTTPClient return http client
 func (c *Client) HTTPClient() *http.Client {
 	return c.httpClient
 }
 
+// SetHTTPClient set http client
 func (c *Client) SetHTTPClient(httpClient *http.Client) {
 	c.httpClient = httpClient
 }
@@ -202,6 +204,7 @@ func (c *Client) LoggerHTTPResp(req *http.Request, resp *http.Response) {
 	c.WriteLog(LogError, "%s\n", logBuffer.String())
 }
 
+// AvailableIntegralBalance get available integral balance
 func (c *Client) AvailableIntegralBalance(ctx context.Context) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(AvailableIntegralBalanceWujieRouter))
 	if err != nil {
@@ -214,6 +217,7 @@ func (c *Client) AvailableIntegralBalance(ctx context.Context) (*http.Response, 
 	return resp, nil
 }
 
+// ExchangePoint exchange points with people
 func (c *Client) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(ExchangePointWujieRouter))
 	if err != nil {
@@ -226,6 +230,7 @@ func (c *Client) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) 
 	return resp, nil
 }
 
+// ModelBaseInfos get model base infos
 func (c *Client) ModelBaseInfos(ctx context.Context) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(ModelBaseInfosWujieRouter))
 	if err != nil {
@@ -238,6 +243,7 @@ func (c *Client) ModelBaseInfos(ctx context.Context) (*http.Response, error) {
 	return resp, nil
 }
 
+// DefaultResourceStyleModel get default resource style model
 func (c *Client) DefaultResourceStyleModel(ctx context.Context) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(DefaultResourceStyleModelWujieRouter))
 	if err != nil {
@@ -250,6 +256,7 @@ func (c *Client) DefaultResourceStyleModel(ctx context.Context) (*http.Response,
 	return resp, nil
 }
 
+// DefaultResourceModel get model's default resource
 func (c *Client) DefaultResourceModel(ctx context.Context, model int32) (*http.Response, error) {
 	values := url.Values{
 		"model": []string{fmt.Sprintf("%d", model)},
@@ -265,6 +272,7 @@ func (c *Client) DefaultResourceModel(ctx context.Context, model int32) (*http.R
 	return resp, nil
 }
 
+// CreateImage create image
 func (c *Client) CreateImage(ctx context.Context, cReq *CreateImageRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(CreateImageWujieRouter))
 	if err != nil {
@@ -277,6 +285,7 @@ func (c *Client) CreateImage(ctx context.Context, cReq *CreateImageRequest) (*ht
 	return resp, nil
 }
 
+// GeneratingInfo get image generating info
 func (c *Client) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(GeneratingInfoWujieRouter))
 	if err != nil {
@@ -289,6 +298,7 @@ func (c *Client) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest
 	return resp, nil
 }
 
+// ImageInfo get image detail
 func (c *Client) ImageInfo(ctx context.Context, key string) (*http.Response, error) {
 	values := url.Values{
 		"key": []string{key},
@@ -304,6 +314,7 @@ func (c *Client) ImageInfo(ctx context.Context, key string) (*http.Response, err
 	return resp, nil
 }
 
+// ImagePriceInfo get image price info
 func (c *Client) ImagePriceInfo(ctx context.Context, iReq *ImagePriceInfoRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(ImagePriceInfoWujieRouter))
 	if err != nil {
@@ -316,6 +327,7 @@ func (c *Client) ImagePriceInfo(ctx context.Context, iReq *ImagePriceInfoRequest
 	return resp, nil
 }
 
+// PostSuperSize create super size
 func (c *Client) PostSuperSize(ctx context.Context, sReq *PostSuperSizeRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(SuperSizeWujieRouter))
 	if err != nil {
@@ -328,6 +340,7 @@ func (c *Client) PostSuperSize(ctx context.Context, sReq *PostSuperSizeRequest) 
 	return resp, nil
 }
 
+// GetSuperSize get super size result
 func (c *Client) GetSuperSize(ctx context.Context, keys []string) (*http.Response, error) {
 	values := url.Values{
 		"key": keys,
@@ -343,6 +356,7 @@ func (c *Client) GetSuperSize(ctx context.Context, keys []string) (*http.Respons
 	return resp, nil
 }
 
+// CreateParams get create params
 func (c *Client) CreateParams(ctx context.Context, pReq *CreateParamsRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(CreateParamsWujieRouter))
 	if err != nil {
@@ -355,6 +369,7 @@ func (c *Client) CreateParams(ctx context.Context, pReq *CreateParamsRequest) (*
 	return resp, nil
 }
 
+// ImageModelQueueInfo get image model queue info
 func (c *Client) ImageModelQueueInfo(ctx context.Context, model int32) (*http.Response, error) {
 	values := url.Values{
 		"model": []string{fmt.Sprintf("%d", model)},
@@ -370,6 +385,7 @@ func (c *Client) ImageModelQueueInfo(ctx context.Context, model int32) (*http.Re
 	return resp, nil
 }
 
+// CancelImage cancel image
 func (c *Client) CancelImage(ctx context.Context, cReq *CancelImageRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(CancelImageWujieRouter))
 	if err != nil {
@@ -382,6 +398,7 @@ func (c *Client) CancelImage(ctx context.Context, cReq *CancelImageRequest) (*ht
 	return resp, nil
 }
 
+// AccelerateImage accelerate image
 func (c *Client) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(AccelerateImageWujieRouter))
 	if err != nil {
@@ -394,6 +411,7 @@ func (c *Client) AccelerateImage(ctx context.Context, aReq *AccelerateImageReque
 	return resp, nil
 }
 
+// CreateImagePro create pro image
 func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(CreateImageProWujieRouter))
 	if err != nil {
@@ -406,6 +424,7 @@ func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest
 	return resp, nil
 }
 
+// GeneratingInfoPro get pro image generating info
 func (c *Client) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProRequest) (*http.Response, error) {
 	path, err := url.Parse(Domain + string(GeneratingInfoProWujieRouter))
 	if err != nil {
