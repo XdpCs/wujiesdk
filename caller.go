@@ -320,6 +320,85 @@ func (c *Caller) AccelerateImage(ctx context.Context, aReq *AccelerateImageReque
 	return code, true, nil
 }
 
+// PromptOptimizeSubmit submit prompt optimize
+func (c *Caller) PromptOptimizeSubmit(ctx context.Context, pReq *PromptOptimizeSubmitRequest) (WujieCode, bool, error) {
+	resp, err := c.Client.PromptOptimizeSubmit(ctx, pReq)
+	if err != nil {
+		return ErrorWujieCode, false, fmt.Errorf("c.Client.PromptOptimizeSubmit: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var pResp PromptOptimizeSubmitResponse
+	if err := json.NewDecoder(resp.Body).Decode(&pResp); err != nil {
+		return ErrorWujieCode, false, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(pResp.Code)
+	if err := code.Err(); err != nil {
+		return code, false, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, PromptOptimizeSubmitRequest: %s",
+			getTraceID(resp), err, pResp.Message, pReq.String())
+	}
+	return code, true, nil
+}
+
+// PromptOptimizeResult get prompt optimize result
+func (c *Caller) PromptOptimizeResult(ctx context.Context, taskID string) (WujieCode, *PromptOptimizeResultData, error) {
+	resp, err := c.Client.PromptOptimizeResult(ctx, taskID)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.PromptOptimizeResult: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var pResp PromptOptimizeResultResponse
+	if err := json.NewDecoder(resp.Body).Decode(&pResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(pResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, taskID: %s",
+			getTraceID(resp), err, pResp.Message, taskID)
+	}
+	return code, &pResp.Data, nil
+}
+
+// Youthify youthify image
+func (c *Caller) Youthify(ctx context.Context, yReq *YouthifyRequest) (WujieCode, *YouthifyData, error) {
+	resp, err := c.Client.Youthify(ctx, yReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.Youthify: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var yResp YouthifyResponse
+	if err := json.NewDecoder(resp.Body).Decode(&yResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(yResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, YouthifyRequest: %s",
+			getTraceID(resp), err, yResp.Message, yReq.String())
+	}
+	return code, &yResp.Data, nil
+}
+
+// QuerySpell query spell
+func (c *Caller) QuerySpell(ctx context.Context) (WujieCode, []QuerySpellData, error) {
+	resp, err := c.Client.QuerySpell(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.QuerySpell: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var qResp QuerySpellResponse
+	if err := json.NewDecoder(resp.Body).Decode(&qResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(qResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s", getTraceID(resp), err, qResp.Message)
+	}
+	return code, qResp.Data, nil
+}
+
 // CreateImagePro create pro image
 func (c *Caller) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (WujieCode, []CreateImageProResult, error) {
 	resp, err := c.Client.CreateImagePro(ctx, cReq)

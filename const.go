@@ -34,6 +34,10 @@ const (
 	CancelImageWujieRouter               WujieRouter = "/ai/cancel"
 	ImagePriceInfoWujieRouter            WujieRouter = "/ai/price_info"
 	SuperSizeWujieRouter                 WujieRouter = "/ai/supersize"
+	PromptOptimizeSubmitWujieRouter      WujieRouter = "/ai/optimize/prompt/submit"
+	PromptOptimizeResultWujieRouter      WujieRouter = "/ai/optimize/prompt/result"
+	YouthifyWujieRouter                  WujieRouter = "/ai/youthify"
+	QuerySpellWujieRouter                WujieRouter = "/ai/spell"
 )
 
 // pro ai WujieRouter

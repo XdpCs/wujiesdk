@@ -579,6 +579,75 @@ type AccelerateImageResponse struct {
 	Data string `json:"data"`
 }
 
+type PromptOptimizeSubmitRequest struct {
+	TaskId      string               `json:"task_id"`
+	Type        PromptSubmitType     `json:"type"`
+	Original    string               `json:"original"`
+	Language    PromptSubmitLanguage `json:"language"`
+	CallbackUrl string               `json:"callback_url"`
+}
+
+func (p *PromptOptimizeSubmitRequest) String() string {
+	return fmt.Sprintf("%+v", *p)
+}
+
+type PromptOptimizeSubmitResponse struct {
+	BaseResponse
+}
+
+type PromptOptimizeResultResponse struct {
+	Code    string                   `json:"code"`
+	Message string                   `json:"message"`
+	Data    PromptOptimizeResultData `json:"data"`
+}
+
+type PromptOptimizeResultData struct {
+	TaskId string `json:"task_id"`
+	Code   int    `json:"code"`
+	Result string `json:"result"`
+}
+
+type YouthifyRequest struct {
+	ImageUrl          string  `json:"image_url"`
+	InitWidth         int     `json:"init_width"`
+	InitHeight        int     `json:"init_height"`
+	Width             int     `json:"width"`
+	Height            int     `json:"height"`
+	SuperSizeMultiple float64 `json:"super_size_multiple"`
+	NotifyUrl         string  `json:"notify_url"`
+}
+
+func (y *YouthifyRequest) String() string {
+	return fmt.Sprintf("%+v", *y)
+}
+
+type YouthifyResponse struct {
+	BaseResponse
+	Data YouthifyData `json:"data"`
+}
+
+type YouthifyData struct {
+	Keys    string `json:"keys"`
+	Results []struct {
+		Key            string `json:"key"`
+		ExpectedSecond int    `json:"expected_second"`
+	} `json:"results"`
+	ExpectedIntegralCost int `json:"expected_integral_cost"`
+}
+
+type QuerySpellResponse struct {
+	BaseResponse
+	Data []QuerySpellData `json:"data"`
+}
+
+type QuerySpellData struct {
+	SpellName   string `json:"spell_name"`
+	SpellEnName string `json:"spell_en_name"`
+	Icon        string `json:"icon"`
+	Category    string `json:"category"`
+	Label       string `json:"label"`
+}
+
 type CreateImageProRequest struct {
 	ModelCode         int    `json:"model_code"`
 	Prompt            string `json:"prompt"`
