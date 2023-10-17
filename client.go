@@ -127,21 +127,6 @@ func (c *Client) ctxGetJson(ctx context.Context, api string, params url.Values) 
 	return c.ctxJson(ctx, http.MethodGet, api, params, nil)
 }
 
-func (c *Client) ctxForm(ctx context.Context, httpMethod string, api string, params url.Values) (*http.Response, error) {
-	api = api + "?" + params.Encode()
-	req, err := http.NewRequestWithContext(ctx, httpMethod, api, nil)
-	req.PostForm = params
-	if err != nil {
-		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", api, err)
-	}
-	req.Header.Set(ContentType, ApplicationFormUrlencodedUTF8)
-	return c.do(req)
-}
-
-func (c *Client) ctxGetForm(ctx context.Context, api string, params url.Values) (*http.Response, error) {
-	return c.ctxForm(ctx, http.MethodGet, api, params)
-}
-
 // HTTPClient return http client
 func (c *Client) HTTPClient() *http.Client {
 	return c.httpClient
@@ -210,9 +195,9 @@ func (c *Client) AvailableIntegralBalance(ctx context.Context) (*http.Response, 
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AvailableIntegralBalanceWujieRouter), err)
 	}
-	resp, err := c.ctxGetForm(ctx, path.String(), nil)
+	resp, err := c.ctxGetJson(ctx, path.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("c.ctxGetForm: error: %w", err)
+		return nil, fmt.Errorf("c.ctxGetJson: error: %w", err)
 	}
 	return resp, nil
 }
@@ -236,9 +221,9 @@ func (c *Client) ModelBaseInfos(ctx context.Context) (*http.Response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ModelBaseInfosWujieRouter), err)
 	}
-	resp, err := c.ctxGetForm(ctx, path.String(), nil)
+	resp, err := c.ctxGetJson(ctx, path.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("c.ctxGetForm: error: %w", err)
+		return nil, fmt.Errorf("c.ctxGetJson: error: %w", err)
 	}
 	return resp, nil
 }
@@ -249,9 +234,9 @@ func (c *Client) DefaultResourceStyleModel(ctx context.Context) (*http.Response,
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(DefaultResourceStyleModelWujieRouter), err)
 	}
-	resp, err := c.ctxGetForm(ctx, path.String(), nil)
+	resp, err := c.ctxGetJson(ctx, path.String(), nil)
 	if err != nil {
-		return nil, fmt.Errorf("c.ctxGetForm: error: %w", err)
+		return nil, fmt.Errorf("c.ctxGetJson: error: %w", err)
 	}
 	return resp, nil
 }
@@ -265,9 +250,9 @@ func (c *Client) DefaultResourceModel(ctx context.Context, model int32) (*http.R
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(DefaultResourceModelWujieRouter), err)
 	}
-	resp, err := c.ctxGetForm(ctx, path.String(), values)
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
 	if err != nil {
-		return nil, fmt.Errorf("c.ctxGetForm: req: %v, error: %w", model, err)
+		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", model, err)
 	}
 	return resp, nil
 }
@@ -407,6 +392,61 @@ func (c *Client) AccelerateImage(ctx context.Context, aReq *AccelerateImageReque
 	resp, err := c.ctxPostJson(ctx, path.String(), nil, aReq)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", aReq.String(), err)
+	}
+	return resp, nil
+}
+
+// PromptOptimizeSubmit submit prompt optimize
+func (c *Client) PromptOptimizeSubmit(ctx context.Context, pReq *PromptOptimizeSubmitRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(PromptOptimizeSubmitWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(PromptOptimizeSubmitWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, pReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", pReq.String(), err)
+	}
+	return resp, nil
+}
+
+// PromptOptimizeResult get prompt optimize result
+func (c *Client) PromptOptimizeResult(ctx context.Context, taskID string) (*http.Response, error) {
+	values := url.Values{
+		"taskId": []string{taskID},
+	}
+	path, err := url.Parse(Domain + string(PromptOptimizeResultWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(PromptOptimizeResultWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", taskID, err)
+	}
+	return resp, nil
+}
+
+// Youthify youthify image
+func (c *Client) Youthify(ctx context.Context, yReq *YouthifyRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(YouthifyWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(YouthifyWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, yReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", yReq.String(), err)
+	}
+	return resp, nil
+}
+
+// QuerySpell query spell
+func (c *Client) QuerySpell(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(QuerySpellWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(QuerySpellWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: error: %w", err)
 	}
 	return resp, nil
 }
