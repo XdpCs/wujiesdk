@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-12 14:47
+// @Update       XdpCs 2023-10-17 10:22
 
 import (
 	"context"
@@ -12,14 +12,17 @@ import (
 	"net/http"
 )
 
+// Caller is the caller for wujie sdk
 type Caller struct {
 	Client *Client
 }
 
+// NewCaller create a new caller
 func NewCaller(c *Client) *Caller {
 	return &Caller{Client: c}
 }
 
+// AvailableIntegralBalance get available integral balance
 func (c *Caller) AvailableIntegralBalance(ctx context.Context) (WujieCode, int, error) {
 	resp, err := c.Client.AvailableIntegralBalance(ctx)
 	if err != nil {
@@ -39,6 +42,7 @@ func (c *Caller) AvailableIntegralBalance(ctx context.Context) (WujieCode, int, 
 	return code, bResp.Data.Balance, nil
 }
 
+// ExchangePoint exchange points with people
 func (c *Caller) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) (WujieCode, bool, error) {
 	resp, err := c.Client.ExchangePoint(ctx, eReq)
 	if err != nil {
@@ -58,6 +62,7 @@ func (c *Caller) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) 
 	return code, true, nil
 }
 
+// ModelBaseInfos get model base infos
 func (c *Caller) ModelBaseInfos(ctx context.Context) (WujieCode, []ModelBaseInfoData, error) {
 	resp, err := c.Client.ModelBaseInfos(ctx)
 	if err != nil {
@@ -77,6 +82,7 @@ func (c *Caller) ModelBaseInfos(ctx context.Context) (WujieCode, []ModelBaseInfo
 	return code, mResp.Data, nil
 }
 
+// DefaultResourceStyleModel get default resource style model
 func (c *Caller) DefaultResourceStyleModel(ctx context.Context) (WujieCode, []StyleModel, error) {
 	resp, err := c.Client.DefaultResourceStyleModel(ctx)
 	if err != nil {
@@ -95,6 +101,7 @@ func (c *Caller) DefaultResourceStyleModel(ctx context.Context) (WujieCode, []St
 	return code, dResp.Data.StyleModels, nil
 }
 
+// DefaultResourceModel get model's default resource
 func (c *Caller) DefaultResourceModel(ctx context.Context, model int32) (WujieCode, *DefaultResourceModelData, error) {
 	resp, err := c.Client.DefaultResourceModel(ctx, model)
 	if err != nil {
@@ -113,6 +120,7 @@ func (c *Caller) DefaultResourceModel(ctx context.Context, model int32) (WujieCo
 	return code, &mResp.Data, nil
 }
 
+// CreateImage create image
 func (c *Caller) CreateImage(ctx context.Context, cReq *CreateImageRequest) (WujieCode, *CreateImageData, error) {
 	resp, err := c.Client.CreateImage(ctx, cReq)
 	if err != nil {
@@ -132,6 +140,7 @@ func (c *Caller) CreateImage(ctx context.Context, cReq *CreateImageRequest) (Wuj
 	return code, &cResp.Data, nil
 }
 
+// GeneratingInfo get image generating info
 func (c *Caller) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest) (WujieCode, []ImageGeneratingInfo, error) {
 	resp, err := c.Client.GeneratingInfo(ctx, gReq)
 	if err != nil {
@@ -151,6 +160,7 @@ func (c *Caller) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest
 	return code, gResp.Data.List, nil
 }
 
+// ImageInfo get image detail
 func (c *Caller) ImageInfo(ctx context.Context, key string) (WujieCode, *ImageInfoData, error) {
 	resp, err := c.Client.ImageInfo(ctx, key)
 	if err != nil {
@@ -170,6 +180,7 @@ func (c *Caller) ImageInfo(ctx context.Context, key string) (WujieCode, *ImageIn
 	return code, &iResp.Data, nil
 }
 
+// ImagePriceInfo get image price info
 func (c *Caller) ImagePriceInfo(ctx context.Context, iReq *ImagePriceInfoRequest) (WujieCode, *ImagePriceInfoData, error) {
 	resp, err := c.Client.ImagePriceInfo(ctx, iReq)
 	if err != nil {
@@ -189,6 +200,7 @@ func (c *Caller) ImagePriceInfo(ctx context.Context, iReq *ImagePriceInfoRequest
 	return code, &iResp.Data, nil
 }
 
+// PostSuperSize create super size
 func (c *Caller) PostSuperSize(ctx context.Context, pReq *PostSuperSizeRequest) (WujieCode, string, error) {
 	resp, err := c.Client.PostSuperSize(ctx, pReq)
 	if err != nil {
@@ -208,6 +220,7 @@ func (c *Caller) PostSuperSize(ctx context.Context, pReq *PostSuperSizeRequest) 
 	return code, pResp.Data.Key, nil
 }
 
+// GetSuperSize get super size result
 func (c *Caller) GetSuperSize(ctx context.Context, keys []string) (WujieCode, []SuperSizeInfo, error) {
 	resp, err := c.Client.GetSuperSize(ctx, keys)
 	if err != nil {
@@ -227,6 +240,7 @@ func (c *Caller) GetSuperSize(ctx context.Context, keys []string) (WujieCode, []
 	return code, gResp.Data, nil
 }
 
+// CreateParams get create params
 func (c *Caller) CreateParams(ctx context.Context, cReq *CreateParamsRequest) (WujieCode, []CreateParams, error) {
 	resp, err := c.Client.CreateParams(ctx, cReq)
 	if err != nil {
@@ -246,6 +260,7 @@ func (c *Caller) CreateParams(ctx context.Context, cReq *CreateParamsRequest) (W
 	return code, cResp.Data, nil
 }
 
+// ImageModelQueueInfo get image model queue info
 func (c *Caller) ImageModelQueueInfo(ctx context.Context, model int32) (WujieCode, *ImageModelQueueInfoData, error) {
 	resp, err := c.Client.ImageModelQueueInfo(ctx, model)
 	if err != nil {
@@ -265,6 +280,7 @@ func (c *Caller) ImageModelQueueInfo(ctx context.Context, model int32) (WujieCod
 	return code, &iResp.Data, nil
 }
 
+// CancelImage cancel image
 func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (WujieCode, string, error) {
 	resp, err := c.Client.CancelImage(ctx, cReq)
 	if err != nil {
@@ -284,6 +300,7 @@ func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (Wuj
 	return code, cResp.Data, nil
 }
 
+// AccelerateImage accelerate image
 func (c *Caller) AccelerateImage(ctx context.Context, aReq *AccelerateImageRequest) (WujieCode, bool, error) {
 	resp, err := c.Client.AccelerateImage(ctx, aReq)
 	if err != nil {
@@ -303,6 +320,7 @@ func (c *Caller) AccelerateImage(ctx context.Context, aReq *AccelerateImageReque
 	return code, true, nil
 }
 
+// CreateImagePro create pro image
 func (c *Caller) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest) (WujieCode, []CreateImageProResult, error) {
 	resp, err := c.Client.CreateImagePro(ctx, cReq)
 	if err != nil {
@@ -322,6 +340,7 @@ func (c *Caller) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest
 	return code, cResp.Data.Results, nil
 }
 
+// GeneratingInfoPro get pro image generating info
 func (c *Caller) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProRequest) (WujieCode, []GeneratingInfoPro, error) {
 	resp, err := c.Client.GeneratingInfoPro(ctx, gReq)
 	if err != nil {
