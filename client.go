@@ -476,3 +476,58 @@ func (c *Client) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProR
 	}
 	return resp, nil
 }
+
+// CreateAvatarArtwork create avatar artwork
+func (c *Client) CreateAvatarArtwork(ctx context.Context, cReq *CreateAvatarArtworkRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateAvatarArtworkWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateAvatarArtworkWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// AvatarDefaultResource get avatar default resource
+func (c *Client) AvatarDefaultResource(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(AvatarDefaultResourceWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AvatarDefaultResourceWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// CreateSpellAnalysis create spell analysis
+func (c *Client) CreateSpellAnalysis(ctx context.Context, cReq *CreateSpellAnalysisRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateSpellAnalysisWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateSpellAnalysisWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// SpellAnalysisInfo get spell analysis info
+func (c *Client) SpellAnalysisInfo(ctx context.Context, key string) (*http.Response, error) {
+	values := url.Values{
+		"spellAnalysisKey": []string{key},
+	}
+	path, err := url.Parse(Domain + string(SpellAnalysisInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(SpellAnalysisInfoWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", key, err)
+	}
+	return resp, nil
+}

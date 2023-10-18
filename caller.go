@@ -439,6 +439,85 @@ func (c *Caller) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProR
 	return code, gResp.Data.Infos, nil
 }
 
+// CreateAvatarArtwork create avatar artwork
+func (c *Caller) CreateAvatarArtwork(ctx context.Context, cReq *CreateAvatarArtworkRequest) (WujieCode, *CreateAvatarArtworkData, error) {
+	resp, err := c.Client.CreateAvatarArtwork(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateAvatarArtwork: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateAvatarArtworkResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateAvatarArtworkRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data, nil
+}
+
+// AvatarDefaultResource get avatar default resource
+func (c *Caller) AvatarDefaultResource(ctx context.Context) (WujieCode, *AvatarDefaultResource, error) {
+	resp, err := c.Client.AvatarDefaultResource(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.AvatarDefaultResource: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var aResp AvatarDefaultResourceResponse
+	if err := json.NewDecoder(resp.Body).Decode(&aResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(aResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s", getTraceID(resp), err, aResp.Message)
+	}
+	return code, &aResp.Data, nil
+}
+
+// CreateSpellAnalysis create spell analysis
+func (c *Caller) CreateSpellAnalysis(ctx context.Context, cReq *CreateSpellAnalysisRequest) (WujieCode, string, error) {
+	resp, err := c.Client.CreateSpellAnalysis(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("c.Client.CreateSpellAnalysis: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateSpellAnalysisResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateSpellAnalysisRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, cResp.Data.Key, nil
+}
+
+// SpellAnalysisInfo get spell analysis info
+func (c *Caller) SpellAnalysisInfo(ctx context.Context, key string) (WujieCode, *SpellAnalysisInfo, error) {
+	resp, err := c.Client.SpellAnalysisInfo(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.SpellAnalysisInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var sResp SpellAnalysisInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(sResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, sResp.Message, key)
+	}
+	return code, &sResp.Data, nil
+}
+
 func getTraceID(resp *http.Response) string {
 	return resp.Header.Get(TraceID)
 }
