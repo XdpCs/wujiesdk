@@ -486,7 +486,7 @@ type CreateParamsResponse struct {
 
 type CreateParams struct {
 	Key                      string  `json:"key"`
-	ArtworkUrl               string  `json:"artwork_url"`
+	ArtworkURL               string  `json:"artwork_url"`
 	Model                    int     `json:"model"`
 	ModelAsString            string  `json:"model_as_string"`
 	ModelCode                int     `json:"model_code"`
@@ -496,14 +496,14 @@ type CreateParams struct {
 	UcPrompt                 string  `json:"uc_prompt"`
 	CreativityDegree         int     `json:"creativity_degree"`
 	CreativityDegreeAsString string  `json:"creativity_degree_as_string"`
-	InitImageUrl             string  `json:"init_image_url"`
+	InitImageURL             string  `json:"init_image_url"`
 	InitWidth                int     `json:"init_width"`
 	InitWidthAsString        string  `json:"init_width_as_string"`
 	InitHeight               int     `json:"init_height"`
 	InitHeightAsString       string  `json:"init_height_as_string"`
 	PretreatmentMethod       string  `json:"pretreatment_method"`
-	MaskImageUrl             string  `json:"mask_image_url"`
-	MaskZoneImageUrl         string  `json:"mask_zone_image_url"`
+	MaskImageURL             string  `json:"mask_image_url"`
+	MaskZoneImageURL         string  `json:"mask_zone_image_url"`
 	Size                     string  `json:"size"`
 	Nature                   int     `json:"nature"`
 	NatureAsString           string  `json:"nature_as_string"`
@@ -584,7 +584,7 @@ type PromptOptimizeSubmitRequest struct {
 	Type        PromptSubmitType     `json:"type"`
 	Original    string               `json:"original"`
 	Language    PromptSubmitLanguage `json:"language"`
-	CallbackUrl string               `json:"callback_url"`
+	CallbackURL string               `json:"callback_url"`
 }
 
 func (p *PromptOptimizeSubmitRequest) String() string {
@@ -608,13 +608,13 @@ type PromptOptimizeResultData struct {
 }
 
 type YouthifyRequest struct {
-	ImageUrl          string  `json:"image_url"`
+	ImageURL          string  `json:"image_url"`
 	InitWidth         int     `json:"init_width"`
 	InitHeight        int     `json:"init_height"`
 	Width             int     `json:"width"`
 	Height            int     `json:"height"`
 	SuperSizeMultiple float64 `json:"super_size_multiple"`
-	NotifyUrl         string  `json:"notify_url"`
+	NotifyURL         string  `json:"notify_url"`
 }
 
 func (y *YouthifyRequest) String() string {
@@ -808,7 +808,7 @@ type GeneratingInfoProData struct {
 type GeneratingInfoPro struct {
 	Key             string  `json:"key"`
 	Status          int     `json:"status"`
-	PictureUrl      string  `json:"picture_url"`
+	PictureURL      string  `json:"picture_url"`
 	ExpectedSeconds int     `json:"expected_seconds"`
 	StartGenTime    int     `json:"start_gen_time"`
 	CompleteTime    int     `json:"complete_time"`
@@ -819,4 +819,76 @@ type GeneratingInfoPro struct {
 		FailCode    int    `json:"fail_code"`
 		FailMessage string `json:"fail_message"`
 	} `json:"fail_message"`
+}
+
+type CreateAvatarArtworkRequest struct {
+	AvatarKey        string            `json:"avatar_key"`
+	Prompt           string            `json:"prompt"`
+	ArtworkTemplates []ArtworkTemplate `json:"artwork_templates"`
+	NotifyURL        string            `json:"notify_url"`
+}
+
+func (c *CreateAvatarArtworkRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type ArtworkTemplate struct {
+	TemplateKey string `json:"template_key"`
+	Number      int    `json:"number"`
+}
+type CreateAvatarArtworkResponse struct {
+	BaseResponse
+	Data CreateAvatarArtworkData `json:"data"`
+}
+
+type CreateAvatarArtworkData struct {
+	Keys    []string `json:"keys"`
+	Results []struct {
+		Key            string `json:"key"`
+		ExpectedSecond int    `json:"expected_second"`
+	} `json:"results"`
+	ExpectedIntegralCost int `json:"expected_integral_cost"`
+}
+
+type AvatarDefaultResourceResponse struct {
+	BaseResponse
+	Data AvatarDefaultResource `json:"data"`
+}
+
+type AvatarDefaultResource struct {
+	AvatarKey       string `json:"avatar_key"`
+	TemplateOptions []struct {
+		TemplateKey  string `json:"template_key"`
+		TemplateName string `json:"template_name"`
+		ThemeKey     string `json:"theme_key"`
+		ThemeName    string `json:"theme_name"`
+	} `json:"template_options"`
+}
+
+type CreateSpellAnalysisRequest struct {
+	ImageURL  string `json:"image_url"`
+	NotifyURL string `json:"notify_url"`
+}
+
+func (c *CreateSpellAnalysisRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateSpellAnalysisResponse struct {
+	BaseResponse
+	Data struct {
+		Key string `json:"key"`
+	} `json:"data"`
+}
+
+type SpellAnalysisInfoResponse struct {
+	BaseResponse
+	Data SpellAnalysisInfo `json:"data"`
+}
+
+type SpellAnalysisInfo struct {
+	SpellAnalysisInfoKey string `json:"spell_analysis_info_key"`
+	Tags                 string `json:"tags"`
+	ImageURL             string `json:"image_url"`
+	Status               int    `json:"status"`
 }

@@ -46,6 +46,18 @@ const (
 	GeneratingInfoProWujieRouter WujieRouter = "/ai/pro/generating_info"
 )
 
+// avatar create artwork WujieRouter
+const (
+	CreateAvatarArtworkWujieRouter   WujieRouter = "/avatar/artwork/create"
+	AvatarDefaultResourceWujieRouter WujieRouter = "/avatar/artwork/default_resource"
+)
+
+// spell analysis WujieRouter
+const (
+	CreateSpellAnalysisWujieRouter WujieRouter = "/ai/spell_analysis/create"
+	SpellAnalysisInfoWujieRouter   WujieRouter = "/ai/spell_analysis/info"
+)
+
 const DefaultExpiration time.Duration = 4 * time.Minute
 const Domain string = "https://gate.wujiebantu.com/wj-open/v1"
 
