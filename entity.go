@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        credentials.go
 // @Description  sign request
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-10 20:47
+// @Update       XdpCs 2023-10-19 15:18
 
 import "fmt"
 
@@ -891,4 +891,48 @@ type SpellAnalysisInfo struct {
 	Tags                 string `json:"tags"`
 	ImageURL             string `json:"image_url"`
 	Status               int    `json:"status"`
+}
+
+type MagicDiceThemeResponse struct {
+	BaseResponse
+	Data []MagicDiceTheme `json:"data"`
+}
+
+type MagicDiceTheme struct {
+	ThemeID int    `json:"theme_id"`
+	Name    string `json:"name"`
+}
+
+type CreateMagicDiceRequest struct {
+	Type     CreateMagicDiceType     `json:"type"`
+	Model    CreateMagicDiceModel    `json:"model"`
+	Keyword  string                  `json:"keyword"`
+	ThemeId  int                     `json:"theme_id"`
+	Language CreateMagicDiceLanguage `json:"language"`
+}
+
+func (c *CreateMagicDiceRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateMagicDiceResponse struct {
+	BaseResponse
+	Data CreateMagicDiceResult `json:"data"`
+}
+
+type CreateMagicDiceResult struct {
+	PromptChinese string   `json:"prompt_chinese"`
+	PromptEnglish string   `json:"prompt_english"`
+	Model         string   `json:"model"`
+	ModelCode     int      `json:"model_code"`
+	Cfg           int      `json:"cfg"`
+	ImageType     []string `json:"image_type"`
+	Style         []string `json:"style"`
+	Artists       []string `json:"artists"`
+	ElementMagic  []string `json:"element_magic"`
+	Character     []string `json:"character"`
+	ModelFusion   []struct {
+		Key    string  `json:"key"`
+		Weight float64 `json:"weight"`
+	} `json:"model_fusion"`
 }

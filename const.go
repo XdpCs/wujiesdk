@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-18 21:18
+// @Update       XdpCs 2023-10-19 15:00
 
 import (
 	"fmt"
@@ -56,6 +56,12 @@ const (
 const (
 	CreateSpellAnalysisWujieRouter WujieRouter = "/ai/spell_analysis/create"
 	SpellAnalysisInfoWujieRouter   WujieRouter = "/ai/spell_analysis/info"
+)
+
+// magic dice WujieRouter
+const (
+	MagicDiceThemeWujieRouter  WujieRouter = "/ai/magic_dice/theme"
+	CreateMagicDiceWujieRouter WujieRouter = "/ai/magic_dice/search"
 )
 
 const DefaultExpiration time.Duration = 4 * time.Minute
