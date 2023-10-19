@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-18 21:18
+// @Update       XdpCs 2023-10-19 15:18
 
 import (
 	"context"
@@ -516,6 +516,45 @@ func (c *Caller) SpellAnalysisInfo(ctx context.Context, key string) (WujieCode, 
 			getTraceID(resp), err, sResp.Message, key)
 	}
 	return code, &sResp.Data, nil
+}
+
+// MagicDiceTheme get magic dice theme
+func (c *Caller) MagicDiceTheme(ctx context.Context) (WujieCode, []MagicDiceTheme, error) {
+	resp, err := c.Client.MagicDiceTheme(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.MagicDiceTheme: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var mResp MagicDiceThemeResponse
+	if err := json.NewDecoder(resp.Body).Decode(&mResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(mResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s", getTraceID(resp), err, mResp.Message)
+	}
+	return code, mResp.Data, nil
+}
+
+// CreateMagicDice create magic dice
+func (c *Caller) CreateMagicDice(ctx context.Context, cReq *CreateMagicDiceRequest) (WujieCode, *CreateMagicDiceResult, error) {
+	resp, err := c.Client.CreateMagicDice(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateMagicDice: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateMagicDiceResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateMagicDiceRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data, nil
 }
 
 func getTraceID(resp *http.Response) string {

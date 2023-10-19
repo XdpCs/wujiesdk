@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-18 21:18
+// @Update       XdpCs 2023-10-19 15:18
 
 import (
 	"bytes"
@@ -528,6 +528,32 @@ func (c *Client) SpellAnalysisInfo(ctx context.Context, key string) (*http.Respo
 	resp, err := c.ctxGetJson(ctx, path.String(), values)
 	if err != nil {
 		return nil, fmt.Errorf("c.ctxGetJson: req: %v, error: %w", key, err)
+	}
+	return resp, nil
+}
+
+// MagicDiceTheme get magic dice theme
+func (c *Client) MagicDiceTheme(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(MagicDiceThemeWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(MagicDiceThemeWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// CreateMagicDice create magic dice
+func (c *Client) CreateMagicDice(ctx context.Context, cReq *CreateMagicDiceRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateMagicDiceWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateMagicDiceWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", cReq.String(), err)
 	}
 	return resp, nil
 }
