@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-16 15:47
+// @Update       XdpCs 2023-10-18 21:18
 
 import (
 	"fmt"

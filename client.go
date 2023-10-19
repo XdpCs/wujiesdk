@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-17 10:20
+// @Update       XdpCs 2023-10-18 21:18
 
 import (
 	"bytes"

@@ -89,23 +89,22 @@ require github.com/XdpCs/wujiesdk latest
 package main
 
 import (
-	"context"
-	"fmt"
+  "context"
 
-	"github.com/XdpCs/wujiesdk"
+  "github.com/XdpCs/wujiesdk"
 )
 
 func main() {
-	c, err := wujiesdk.NewCredentials("appID", "PrivateKey")
-	if err != nil {
-		panic(err)
-	}
+  c, err := wujiesdk.NewCredentials("appID", "PrivateKey")
+  if err != nil {
+    panic(err)
+  }
 
-	client := wujiesdk.NewDefaultClient(c)
-	ca := wujiesdk.NewCaller(client)
-	code, _, err := ca.CancelImage(context.Background(), wujiesdk.NewCancelImageRequest("2087C400944DF2D6B25BED29C910B1B8"))
-	if err != nil {
-		fmt.Println(code)
-	}
+  client := wujiesdk.NewDefaultClient(c)
+  ca := wujiesdk.NewCaller(client)
+  _, _, err = ca.CancelImage(context.Background(), wujiesdk.NewCancelImageRequest("2087C400944DF2D6B25BED29C910B1B8"))
+  if err != nil {
+    panic(err)
+  }
 }
 ```

@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-17 10:22
+// @Update       XdpCs 2023-10-18 21:18
 
 import (
 	"context"
