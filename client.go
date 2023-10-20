@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-19 15:18
+// @Update       XdpCs 2023-10-20 19:51
 
 import (
 	"bytes"
@@ -271,14 +271,19 @@ func (c *Client) CreateImage(ctx context.Context, cReq *CreateImageRequest) (*ht
 }
 
 // GeneratingInfo get image generating info
-func (c *Client) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest) (*http.Response, error) {
+func (c *Client) GeneratingInfo(ctx context.Context, keys []string) (*http.Response, error) {
+	body := &struct {
+		Keys []string `json:"keys"`
+	}{
+		Keys: keys,
+	}
 	path, err := url.Parse(Domain + string(GeneratingInfoWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(GeneratingInfoWujieRouter), err)
 	}
-	resp, err := c.ctxPostJson(ctx, path.String(), nil, gReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, body)
 	if err != nil {
-		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", gReq.String(), err)
+		return nil, fmt.Errorf("c.ctxPostJson: keys: %v, error: %w", keys, err)
 	}
 	return resp, nil
 }
@@ -342,14 +347,19 @@ func (c *Client) GetSuperSize(ctx context.Context, keys []string) (*http.Respons
 }
 
 // CreateParams get create params
-func (c *Client) CreateParams(ctx context.Context, pReq *CreateParamsRequest) (*http.Response, error) {
+func (c *Client) CreateParams(ctx context.Context, keys []string) (*http.Response, error) {
+	body := &struct {
+		Key []string `json:"key"`
+	}{
+		Key: keys,
+	}
 	path, err := url.Parse(Domain + string(CreateParamsWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateParamsWujieRouter), err)
 	}
-	resp, err := c.ctxPostJson(ctx, path.String(), nil, pReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, body)
 	if err != nil {
-		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", pReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: keys: %v, error: %w", keys, err)
 	}
 	return resp, nil
 }
@@ -371,14 +381,19 @@ func (c *Client) ImageModelQueueInfo(ctx context.Context, model int32) (*http.Re
 }
 
 // CancelImage cancel image
-func (c *Client) CancelImage(ctx context.Context, cReq *CancelImageRequest) (*http.Response, error) {
+func (c *Client) CancelImage(ctx context.Context, key string) (*http.Response, error) {
+	body := &struct {
+		Key string `json:"key"`
+	}{
+		Key: key,
+	}
 	path, err := url.Parse(Domain + string(CancelImageWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CancelImageWujieRouter), err)
 	}
-	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, body)
 	if err != nil {
-		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", cReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: key: %v, error: %w", key, err)
 	}
 	return resp, nil
 }
@@ -465,14 +480,84 @@ func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest
 }
 
 // GeneratingInfoPro get pro image generating info
-func (c *Client) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProRequest) (*http.Response, error) {
+func (c *Client) GeneratingInfoPro(ctx context.Context, keys []string) (*http.Response, error) {
+	gReq := &struct {
+		Keys []string `json:"keys"`
+	}{
+		Keys: keys,
+	}
 	path, err := url.Parse(Domain + string(GeneratingInfoProWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(GeneratingInfoProWujieRouter), err)
 	}
 	resp, err := c.ctxPostJson(ctx, path.String(), nil, gReq)
 	if err != nil {
-		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", gReq.String(), err)
+		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", keys, err)
+	}
+	return resp, nil
+}
+
+// CreateAvatar create avatar
+func (c *Client) CreateAvatar(ctx context.Context, cReq *CreateAvatarRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateAvatarWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateAvatarWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// DeleteAvatar delete avatar
+func (c *Client) DeleteAvatar(ctx context.Context, key string) (*http.Response, error) {
+	body := &struct {
+		AvatarKey string `json:"avatar_key"`
+	}{
+		AvatarKey: key,
+	}
+	path, err := url.Parse(Domain + string(DeleteAvatarWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(DeleteAvatarWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, body)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: key: %v, error: %w", key, err)
+	}
+	return resp, nil
+}
+
+// AvatarInfo get avatar info
+func (c *Client) AvatarInfo(ctx context.Context, key string) (*http.Response, error) {
+	values := url.Values{
+		"key": []string{key},
+	}
+	path, err := url.Parse(Domain + string(AvatarInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AvatarInfoWujieRouter), err)
+	}
+	resp, err := c.ctxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxGetJson: key: %v, error: %w", key, err)
+	}
+	return resp, nil
+}
+
+// ImageBatchCheck image batch check
+func (c *Client) ImageBatchCheck(ctx context.Context, imageURLList []string) (*http.Response, error) {
+	body := &struct {
+		ImageURLList []string `json:"image_url_list"`
+	}{
+		ImageURLList: imageURLList,
+	}
+	path, err := url.Parse(Domain + string(ImageBatchCheckWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageBatchCheckWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, body)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: imageURLList: %v, error: %w", imageURLList, err)
 	}
 	return resp, nil
 }

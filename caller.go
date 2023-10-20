@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-19 15:18
+// @Update       XdpCs 2023-10-20 19:51
 
 import (
 	"context"
@@ -141,8 +141,8 @@ func (c *Caller) CreateImage(ctx context.Context, cReq *CreateImageRequest) (Wuj
 }
 
 // GeneratingInfo get image generating info
-func (c *Caller) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest) (WujieCode, []ImageGeneratingInfo, error) {
-	resp, err := c.Client.GeneratingInfo(ctx, gReq)
+func (c *Caller) GeneratingInfo(ctx context.Context, keys []string) (WujieCode, []ImageGeneratingInfo, error) {
+	resp, err := c.Client.GeneratingInfo(ctx, keys)
 	if err != nil {
 		return ErrorWujieCode, nil, fmt.Errorf("c.Client.GeneratingInfo: %w", err)
 	}
@@ -154,8 +154,8 @@ func (c *Caller) GeneratingInfo(ctx context.Context, gReq *GeneratingInfoRequest
 	}
 	code := WujieCode(gResp.Code)
 	if err := code.Err(); err != nil {
-		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, GeneratingInfoRequest: %s",
-			getTraceID(resp), err, gResp.Message, gReq.String())
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, keys: %v",
+			getTraceID(resp), err, gResp.Message, keys)
 	}
 	return code, gResp.Data.List, nil
 }
@@ -241,8 +241,8 @@ func (c *Caller) GetSuperSize(ctx context.Context, keys []string) (WujieCode, []
 }
 
 // CreateParams get create params
-func (c *Caller) CreateParams(ctx context.Context, cReq *CreateParamsRequest) (WujieCode, []CreateParams, error) {
-	resp, err := c.Client.CreateParams(ctx, cReq)
+func (c *Caller) CreateParams(ctx context.Context, keys []string) (WujieCode, []CreateParams, error) {
+	resp, err := c.Client.CreateParams(ctx, keys)
 	if err != nil {
 		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateParams: %w", err)
 	}
@@ -254,8 +254,8 @@ func (c *Caller) CreateParams(ctx context.Context, cReq *CreateParamsRequest) (W
 	}
 	code := WujieCode(cResp.Code)
 	if err := code.Err(); err != nil {
-		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateParamsRequest: %s",
-			getTraceID(resp), err, cResp.Message, cReq.String())
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, keys: %v",
+			getTraceID(resp), err, cResp.Message, keys)
 	}
 	return code, cResp.Data, nil
 }
@@ -281,8 +281,8 @@ func (c *Caller) ImageModelQueueInfo(ctx context.Context, model int32) (WujieCod
 }
 
 // CancelImage cancel image
-func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (WujieCode, string, error) {
-	resp, err := c.Client.CancelImage(ctx, cReq)
+func (c *Caller) CancelImage(ctx context.Context, key string) (WujieCode, string, error) {
+	resp, err := c.Client.CancelImage(ctx, key)
 	if err != nil {
 		return ErrorWujieCode, "", fmt.Errorf("c.Client.CancelImage: %w", err)
 	}
@@ -294,8 +294,8 @@ func (c *Caller) CancelImage(ctx context.Context, cReq *CancelImageRequest) (Wuj
 	}
 	code := WujieCode(cResp.Code)
 	if err := code.Err(); err != nil {
-		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CancelImageRequest: %s",
-			getTraceID(resp), err, cResp.Message, cReq.String())
+		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, cResp.Message, key)
 	}
 	return code, cResp.Data, nil
 }
@@ -420,8 +420,8 @@ func (c *Caller) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest
 }
 
 // GeneratingInfoPro get pro image generating info
-func (c *Caller) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProRequest) (WujieCode, []GeneratingInfoPro, error) {
-	resp, err := c.Client.GeneratingInfoPro(ctx, gReq)
+func (c *Caller) GeneratingInfoPro(ctx context.Context, keys []string) (WujieCode, []GeneratingInfoPro, error) {
+	resp, err := c.Client.GeneratingInfoPro(ctx, keys)
 	if err != nil {
 		return ErrorWujieCode, nil, fmt.Errorf("c.Client.GeneratingInfoPro: %w", err)
 	}
@@ -433,10 +433,93 @@ func (c *Caller) GeneratingInfoPro(ctx context.Context, gReq *GeneratingInfoProR
 	}
 	code := WujieCode(gResp.Code)
 	if err := code.Err(); err != nil {
-		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, GeneratingInfoProRequest: %s",
-			getTraceID(resp), err, gResp.Message, gReq.String())
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, keys: %v",
+			getTraceID(resp), err, gResp.Message, keys)
 	}
 	return code, gResp.Data.Infos, nil
+}
+
+// CreateAvatar create avatar
+func (c *Caller) CreateAvatar(ctx context.Context, cReq *CreateAvatarRequest) (WujieCode, *CreateAvatarData, error) {
+	resp, err := c.Client.CreateAvatar(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateAvatar: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateAvatarResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateAvatarRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data, nil
+}
+
+// DeleteAvatar delete avatar
+func (c *Caller) DeleteAvatar(ctx context.Context, key string) (WujieCode, bool, error) {
+	resp, err := c.Client.DeleteAvatar(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, false, fmt.Errorf("c.Client.DeleteAvatar: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var dResp BaseResponse
+	if err := json.NewDecoder(resp.Body).Decode(&dResp); err != nil {
+		return ErrorWujieCode, false, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(dResp.Code)
+	if err := code.Err(); err != nil {
+		return code, false, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, dResp.Message, key)
+	}
+	return code, true, nil
+}
+
+// AvatarInfo get avatar info
+func (c *Caller) AvatarInfo(ctx context.Context, key string) (WujieCode, *AvatarInfoData, error) {
+	resp, err := c.Client.AvatarInfo(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.AvatarInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var aResp AvatarInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&aResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(aResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, aResp.Message, key)
+	}
+	return code, &aResp.Data, nil
+}
+
+// ImageBatchCheck image batch check
+func (c *Caller) ImageBatchCheck(ctx context.Context, imageURLList []string) (WujieCode, []ImageCheckInfo, error) {
+	resp, err := c.Client.ImageBatchCheck(ctx, imageURLList)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.ImageBatchCheck: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var iResp ImageBatchCheckResponse
+	if err := json.NewDecoder(resp.Body).Decode(&iResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(iResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, iResp.Message)
+	}
+	return code, iResp.Data.ImageCheckInfoList, nil
 }
 
 // CreateAvatarArtwork create avatar artwork
