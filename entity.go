@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        credentials.go
 // @Description  sign request
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-19 15:18
+// @Update       XdpCs 2023-10-20 19:44
 
 import "fmt"
 
@@ -268,14 +268,6 @@ type CreateImageData struct {
 	ExpectedIntegralCost int `json:"expected_integral_cost"`
 }
 
-type GeneratingInfoRequest struct {
-	Keys []string `json:"keys"`
-}
-
-func (g *GeneratingInfoRequest) String() string {
-	return fmt.Sprintf("%+v", *g)
-}
-
 type GeneratingInfoResponse struct {
 	BaseResponse
 	Data GeneratingInfoData `json:"data"`
@@ -471,14 +463,6 @@ type SuperSizeInfo struct {
 	Duration int     `json:"duration"`
 }
 
-type CreateParamsRequest struct {
-	Key []string `json:"key"`
-}
-
-func (c *CreateParamsRequest) String() string {
-	return fmt.Sprintf("%+v", *c)
-}
-
 type CreateParamsResponse struct {
 	BaseResponse
 	Data []CreateParams `json:"data"`
@@ -544,18 +528,6 @@ type ImageModelQueueInfoData struct {
 	ReduceTime      int `json:"reduce_time"`
 }
 
-type CancelImageRequest struct {
-	Key string `json:"key"`
-}
-
-func NewCancelImageRequest(key string) *CancelImageRequest {
-	return &CancelImageRequest{Key: key}
-}
-
-func (c *CancelImageRequest) String() string {
-	return fmt.Sprintf("%+v", *c)
-}
-
 type CancelImageResponse struct {
 	BaseResponse
 	Data string `json:"data"`
@@ -580,7 +552,7 @@ type AccelerateImageResponse struct {
 }
 
 type PromptOptimizeSubmitRequest struct {
-	TaskId      string               `json:"task_id"`
+	TaskID      string               `json:"task_id"`
 	Type        PromptSubmitType     `json:"type"`
 	Original    string               `json:"original"`
 	Language    PromptSubmitLanguage `json:"language"`
@@ -596,13 +568,12 @@ type PromptOptimizeSubmitResponse struct {
 }
 
 type PromptOptimizeResultResponse struct {
-	Code    string                   `json:"code"`
-	Message string                   `json:"message"`
-	Data    PromptOptimizeResultData `json:"data"`
+	BaseResponse
+	Data PromptOptimizeResultData `json:"data"`
 }
 
 type PromptOptimizeResultData struct {
-	TaskId string `json:"task_id"`
+	TaskID string `json:"task_id"`
 	Code   int    `json:"code"`
 	Result string `json:"result"`
 }
@@ -788,14 +759,6 @@ type CreateImageProResult struct {
 	ExpectedSecond int    `json:"expected_second"`
 }
 
-type GeneratingInfoProRequest struct {
-	GeneratingInfoRequest
-}
-
-func (g *GeneratingInfoProRequest) String() string {
-	return fmt.Sprintf("%+v", *g)
-}
-
 type GeneratingInfoProResponse struct {
 	BaseResponse
 	Data GeneratingInfoProData `json:"data"`
@@ -935,4 +898,49 @@ type CreateMagicDiceResult struct {
 		Key    string  `json:"key"`
 		Weight float64 `json:"weight"`
 	} `json:"model_fusion"`
+}
+
+type CreateAvatarRequest struct {
+	TrainImageUrlList []string `json:"train_image_url_list"`
+	NotifyUrl         string   `json:"notify_url"`
+}
+
+func (c *CreateAvatarRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateAvatarResponse struct {
+	BaseResponse
+	Data CreateAvatarData `json:"data"`
+}
+
+type CreateAvatarData struct {
+	Key            string `json:"key"`
+	ExpectedSecond int    `json:"expected_second"`
+}
+
+type AvatarInfoResponse struct {
+	BaseResponse
+	Data AvatarInfoData `json:"data"`
+}
+
+type AvatarInfoData struct {
+	Key             string `json:"key"`
+	ModelFusionName string `json:"model_fusion_name"`
+	Status          int    `json:"status"`
+}
+
+type ImageBatchCheckResponse struct {
+	BaseResponse
+	Data struct {
+		ImageCheckInfoList []ImageCheckInfo `json:"image_check_info_list"`
+	} `json:"data"`
+}
+
+type ImageCheckInfo struct {
+	ImageUrl   string  `json:"image_url"`
+	Pass       bool    `json:"pass"`
+	Status     string  `json:"status"`
+	Message    string  `json:"message"`
+	Similarity float64 `json:"similarity"`
 }

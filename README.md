@@ -46,11 +46,11 @@ require github.com/XdpCs/wujiesdk latest
     - [x] 图片年轻化接口
     - [x] 作画咒语查询
     - [x] 查询描述词优化任务结果
-- [ ] 化身训练
-    - [ ] 化身训练图片检测
-    - [ ] 化身详情查询
-    - [ ] 化身删除
-    - [ ] 创建化身
+- [x] 化身训练
+    - [x] 化身训练图片检测
+    - [x] 化身详情查询
+    - [x] 化身删除
+    - [x] 创建化身
 - [x] 化身作画
     - [x] 化身作画接口
     - [x] 化身作画资源选项接口
@@ -89,22 +89,23 @@ require github.com/XdpCs/wujiesdk latest
 package main
 
 import (
-  "context"
+	"context"
 
-  "github.com/XdpCs/wujiesdk"
+	"github.com/XdpCs/wujiesdk"
 )
 
 func main() {
-  c, err := wujiesdk.NewCredentials("appID", "PrivateKey")
-  if err != nil {
-    panic(err)
-  }
+	c, err := wujiesdk.NewCredentials("appID", "PrivateKey")
+	if err != nil {
+		panic(err)
+	}
 
-  client := wujiesdk.NewDefaultClient(c)
-  ca := wujiesdk.NewCaller(client)
-  _, _, err = ca.CancelImage(context.Background(), wujiesdk.NewCancelImageRequest("2087C400944DF2D6B25BED29C910B1B8"))
-  if err != nil {
-    panic(err)
-  }
+	client := wujiesdk.NewDefaultClient(c)
+	ca := wujiesdk.NewCaller(client)
+	_, _, err = ca.CancelImage(context.Background(), "2087C400944DF2D6B25BED29C910B1B8")
+	if err != nil {
+		panic(err)
+	}
 }
+
 ```

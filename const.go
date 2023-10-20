@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-19 15:00
+// @Update       XdpCs 2023-10-20 14:06
 
 import (
 	"fmt"
@@ -50,6 +50,10 @@ const (
 const (
 	CreateAvatarArtworkWujieRouter   WujieRouter = "/avatar/artwork/create"
 	AvatarDefaultResourceWujieRouter WujieRouter = "/avatar/artwork/default_resource"
+	CreateAvatarWujieRouter          WujieRouter = "/avatar/create"
+	DeleteAvatarWujieRouter          WujieRouter = "/avatar/delete"
+	AvatarInfoWujieRouter            WujieRouter = "/avatar/info"
+	ImageBatchCheckWujieRouter       WujieRouter = "/avatar/image_check_batch"
 )
 
 // spell analysis WujieRouter
@@ -64,14 +68,13 @@ const (
 	CreateMagicDiceWujieRouter WujieRouter = "/ai/magic_dice/search"
 )
 
-const DefaultExpiration time.Duration = 4 * time.Minute
+const DefaultExpiration = 4 * time.Minute
 const Domain string = "https://gate.wujiebantu.com/wj-open/v1"
 
 const (
-	ContentType                   string = "Content-Type"
-	ApplicationFormUrlencodedUTF8 string = "application/x-www-form-urlencoded;charset=UTF-8"
-	ApplicationJson               string = "application/json"
-	HTTPHeaderAuthorization       string = "Authorization"
+	ContentType             string = "Content-Type"
+	ApplicationJson         string = "application/json"
+	HTTPHeaderAuthorization string = "Authorization"
 )
 const TraceID string = "TRACE_ID"
 
