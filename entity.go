@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        credentials.go
 // @Description  sign request
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-20 19:44
+// @Update       XdpCs 2023-10-21 19:44
 
 import "fmt"
 
@@ -943,4 +943,23 @@ type ImageCheckInfo struct {
 	Status     string  `json:"status"`
 	Message    string  `json:"message"`
 	Similarity float64 `json:"similarity"`
+}
+
+type CreateVideoRequest struct {
+	OriginVideoUrl string `json:"origin_video_url"`
+	VideoDuration  int    `json:"video_duration"`
+	ModelCode      int    `json:"model_code"`
+	QueueType      int    `json:"queue_type"`
+	NotifyUrl      string `json:"notify_url"`
+}
+
+func (c *CreateVideoRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateVideoResponse struct {
+	BaseResponse
+	Data struct {
+		Key string `json:"key"`
+	} `json:"data"`
 }

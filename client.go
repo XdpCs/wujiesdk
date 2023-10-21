@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-20 19:51
+// @Update       XdpCs 2023-10-21 19:51
 
 import (
 	"bytes"
@@ -277,9 +277,9 @@ func (c *Client) GeneratingInfo(ctx context.Context, keys []string) (*http.Respo
 	}{
 		Keys: keys,
 	}
-	path, err := url.Parse(Domain + string(GeneratingInfoWujieRouter))
+	path, err := url.Parse(Domain + string(ImageGeneratingInfoWujieRouter))
 	if err != nil {
-		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(GeneratingInfoWujieRouter), err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageGeneratingInfoWujieRouter), err)
 	}
 	resp, err := c.ctxPostJson(ctx, path.String(), nil, body)
 	if err != nil {
@@ -486,9 +486,9 @@ func (c *Client) GeneratingInfoPro(ctx context.Context, keys []string) (*http.Re
 	}{
 		Keys: keys,
 	}
-	path, err := url.Parse(Domain + string(GeneratingInfoProWujieRouter))
+	path, err := url.Parse(Domain + string(ImageGeneratingInfoProWujieRouter))
 	if err != nil {
-		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(GeneratingInfoProWujieRouter), err)
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageGeneratingInfoProWujieRouter), err)
 	}
 	resp, err := c.ctxPostJson(ctx, path.String(), nil, gReq)
 	if err != nil {
@@ -635,6 +635,19 @@ func (c *Client) CreateMagicDice(ctx context.Context, cReq *CreateMagicDiceReque
 	path, err := url.Parse(Domain + string(CreateMagicDiceWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateMagicDiceWujieRouter), err)
+	}
+	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.ctxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// CreateVideo create video
+func (c *Client) CreateVideo(ctx context.Context, cReq *CreateVideoRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateVideoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateVideoWujieRouter), err)
 	}
 	resp, err := c.ctxPostJson(ctx, path.String(), nil, cReq)
 	if err != nil {
