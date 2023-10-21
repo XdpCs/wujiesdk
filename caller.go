@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-20 19:51
+// @Update       XdpCs 2023-10-21 19:51
 
 import (
 	"context"
@@ -638,6 +638,26 @@ func (c *Caller) CreateMagicDice(ctx context.Context, cReq *CreateMagicDiceReque
 			getTraceID(resp), err, cResp.Message, cReq.String())
 	}
 	return code, &cResp.Data, nil
+}
+
+// CreateVideo create video
+func (c *Caller) CreateVideo(ctx context.Context, cReq *CreateVideoRequest) (WujieCode, string, error) {
+	resp, err := c.Client.CreateVideo(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("c.Client.CreateVideo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateVideoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateVideoRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, cResp.Data.Key, nil
 }
 
 func getTraceID(resp *http.Response) string {

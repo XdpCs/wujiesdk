@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-20 14:06
+// @Update       XdpCs 2023-10-21 19:30
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ const (
 const (
 	DefaultResourceModelWujieRouter      WujieRouter = "/ai/default_resource"
 	ModelBaseInfosWujieRouter            WujieRouter = "/ai/model_base_infos"
-	GeneratingInfoWujieRouter            WujieRouter = "/ai/generating_info"
+	ImageGeneratingInfoWujieRouter       WujieRouter = "/ai/generating_info"
 	CreateParamsWujieRouter              WujieRouter = "/ai/create_params"
 	ImageInfoWujieRouter                 WujieRouter = "/ai/info"
 	ImageModelQueueInfoWujieRouter       WujieRouter = "/ai/model_info"
@@ -42,8 +42,8 @@ const (
 
 // pro ai WujieRouter
 const (
-	CreateImageProWujieRouter    WujieRouter = "/ai/pro/create"
-	GeneratingInfoProWujieRouter WujieRouter = "/ai/pro/generating_info"
+	CreateImageProWujieRouter         WujieRouter = "/ai/pro/create"
+	ImageGeneratingInfoProWujieRouter WujieRouter = "/ai/pro/generating_info"
 )
 
 // avatar create artwork WujieRouter
@@ -66,6 +66,16 @@ const (
 const (
 	MagicDiceThemeWujieRouter  WujieRouter = "/ai/magic_dice/theme"
 	CreateMagicDiceWujieRouter WujieRouter = "/ai/magic_dice/search"
+)
+
+// video to video WujieRouter
+const (
+	CreateVideoWujieRouter                  WujieRouter = "/ai/video/create"
+	VideoInfoWujieRouter                    WujieRouter = "/ai/video/info"
+	VideoPriceInfoWujieRouter               WujieRouter = "/ai/video/price_info"
+	VideoOptionMenuAndPriceTableWujieRouter WujieRouter = "/ai/video/option_menu"
+	VideoWaitTimeWujieRouter                WujieRouter = "/ai/video/wait_time"
+	VideoGeneratingInfoWujieRouter          WujieRouter = "/ai/video/generating_info"
 )
 
 const DefaultExpiration = 4 * time.Minute
