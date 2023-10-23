@@ -1,11 +1,13 @@
 package wujiesdk
 
-// @Title        credentials.go
-// @Description  sign request
+// @Title        entity.go
+// @Description  entity
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-21 19:44
+// @Update       XdpCs 2023-10-23 15:00
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type BaseResponse struct {
 	Code    string `json:"code"`
@@ -431,10 +433,32 @@ type ImagePriceInfoData struct {
 }
 
 type PostSuperSizeRequest struct {
-	URL           string `json:"url"`
-	Multiple      int    `json:"multiple"`
-	SuperSizeType string `json:"super_size_type"`
-	CostType      string `json:"cost_type"`
+	URL           string            `json:"url"`
+	Multiple      float64           `json:"multiple"`
+	SuperSizeType SuperSizeType     `json:"super_size_type"`
+	CostType      SuperSizeCostType `json:"cost_type"`
+}
+
+type SuperSizeOption func(s *PostSuperSizeRequest)
+
+func NewPostSuperSizeRequest(url string, multiple float64, options ...SuperSizeOption) *PostSuperSizeRequest {
+	p := &PostSuperSizeRequest{URL: url, Multiple: multiple}
+	for _, option := range options {
+		option(p)
+	}
+	return p
+}
+
+func WithSuperSizeType(superSizeType SuperSizeType) SuperSizeOption {
+	return func(p *PostSuperSizeRequest) {
+		p.SuperSizeType = superSizeType
+	}
+}
+
+func WithCostType(costType SuperSizeCostType) func(s *PostSuperSizeRequest) {
+	return func(p *PostSuperSizeRequest) {
+		p.CostType = costType
+	}
 }
 
 func (s *PostSuperSizeRequest) String() string {

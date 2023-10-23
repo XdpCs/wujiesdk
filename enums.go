@@ -1,9 +1,9 @@
 package wujiesdk
 
 // @Title        enums.go
-// @Description
+// @Description  enums
 // @Create       XdpCs 2023-10-17 20:48
-// @Update       XdpCs 2023-10-19 15:08
+// @Update       XdpCs 2023-10-23 15:08
 
 // PromptSubmitType prompt submit type /ai/optimize/prompt/submit
 type PromptSubmitType int8
@@ -45,4 +45,20 @@ type CreateMagicDiceLanguage string
 const (
 	ChineseCreateMagicDiceLanguage CreateMagicDiceLanguage = "CHINESE"
 	EnglishCreateMagicDiceLanguage CreateMagicDiceLanguage = "ENGLISH"
+)
+
+// SuperSizeType super size type /ai/supersize
+type SuperSizeType string
+
+const (
+	GeneralSuperSizeType = "GENERAL"
+	AnimeSuperSizeType   = "ANIME"
+)
+
+// SuperSizeCostType super size cost type /ai/supersize
+type SuperSizeCostType string
+
+const (
+	IntegralSuperSizeCostType = "INTEGRAL"
+	DurationSuperSizeCostType = "DURATION"
 )
