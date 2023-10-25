@@ -435,8 +435,8 @@ type ImagePriceInfoData struct {
 type PostSuperSizeRequest struct {
 	URL           string            `json:"url"`
 	Multiple      float64           `json:"multiple"`
-	SuperSizeType SuperSizeType     `json:"super_size_type"`
-	CostType      SuperSizeCostType `json:"cost_type"`
+	SuperSizeType SuperSizeType     `json:"super_size_type,omitempty"`
+	CostType      SuperSizeCostType `json:"cost_type,omitempty"`
 }
 
 type SuperSizeOption func(s *PostSuperSizeRequest)
