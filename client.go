@@ -107,7 +107,7 @@ func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, par
 	if apiParams != "" {
 		api = api + "?" + apiParams
 	}
-	req, err := http.NewRequestWithContext(ctx, httpMethod, api, nil)
+	req, err := http.NewRequestWithContext(ctx, httpMethod, api, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", api, err)
 	}
@@ -117,8 +117,6 @@ func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, par
 			return nil, fmt.Errorf("json.Marshal: marshal body error: %w", err)
 		}
 		req.Body = io.NopCloser(bytes.NewReader(data))
-	} else {
-		req.Body = http.NoBody
 	}
 	req.Header.Set(ContentType, ApplicationJson)
 	return c.do(req)
