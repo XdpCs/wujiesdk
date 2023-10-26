@@ -117,6 +117,8 @@ func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, par
 			return nil, fmt.Errorf("json.Marshal: marshal body error: %w", err)
 		}
 		req.Body = io.NopCloser(bytes.NewReader(data))
+	} else {
+		req.Body = http.NoBody
 	}
 	req.Header.Set(ContentType, ApplicationJson)
 	return c.do(req)
