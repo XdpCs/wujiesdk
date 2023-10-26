@@ -161,8 +161,8 @@ type CreateImageRequest struct {
 	InitHeight          int           `json:"init_height,omitempty"`
 	CreativityDegree    int           `json:"creativity_degree,omitempty"`
 	InitImageSimilarity int           `json:"init_image_similarity,omitempty"`
-	SuperSizeMultiple   int           `json:"super_size_multiple,omitempty"`
-	PrefineMultiple     int           `json:"prefine_multiple,omitempty"`
+	SuperSizeMultiple   float64       `json:"super_size_multiple,omitempty"`
+	PrefineMultiple     float64       `json:"prefine_multiple,omitempty"`
 	ImageType           []string      `json:"image_type,omitempty"`
 	Style               []string      `json:"style,omitempty"`
 	Artist              string        `json:"artist,omitempty"`
