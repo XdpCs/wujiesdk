@@ -149,50 +149,47 @@ type DefaultResourceModelData struct {
 }
 
 type CreateImageRequest struct {
-	Model               int      `json:"model"`
-	Prompt              string   `json:"prompt"`
-	UcPrompt            string   `json:"uc_prompt"`
-	FullyCustomUcPrompt bool     `json:"fully_custom_uc_prompt"`
-	Num                 int      `json:"num"`
-	Width               int      `json:"width"`
-	Height              int      `json:"height"`
-	InitImageURL        string   `json:"init_image_url"`
-	InitWidth           int      `json:"init_width"`
-	InitHeight          int      `json:"init_height"`
-	CreativityDegree    int      `json:"creativity_degree"`
-	InitImageSimilarity int      `json:"init_image_similarity"`
-	SuperSizeMultiple   int      `json:"super_size_multiple"`
-	PrefineMultiple     int      `json:"prefine_multiple"`
-	ImageType           []string `json:"image_type"`
-	Style               []string `json:"style"`
-	Artist              string   `json:"artist"`
-	Artists             []string `json:"artists"`
-	ElementMagic        []string `json:"element_magic"`
-	StyleDecoration     []string `json:"style_decoration"`
-	ModelParam          string   `json:"model_param"`
-	AccelerateTimes     int      `json:"accelerate_times"`
-	Vendor              int      `json:"vendor"`
-	Character           []string `json:"character"`
-	ModelFusion         []struct {
-		Key    string  `json:"key"`
-		Weight float64 `json:"weight"`
-	} `json:"model_fusion"`
-	StyleModel         string `json:"style_model"`
-	Pattern            string `json:"pattern"`
-	PretreatmentMethod string `json:"pretreatment_method"`
-	Steps              int    `json:"steps"`
-	Cfg                int    `json:"cfg"`
-	SamplerIndex       int    `json:"sampler_index"`
-	Seed               string `json:"seed"`
-	QueueType          int    `json:"queue_type"`
-	CreateSource       int    `json:"create_source"`
-	ClipSkip           int    `json:"clip_skip"`
-	ControlWeight      int    `json:"control_weight"`
-	ControlImg2Img     bool   `json:"control_img2_img"`
-	ControlMode        int    `json:"control_mode"`
-	DetectGrayNum      int    `json:"detect_gray_num"`
-	NotifyURL          string `json:"notify_url"`
-	ServiceContext     struct {
+	Model               int           `json:"model"`
+	Prompt              string        `json:"prompt"`
+	UcPrompt            string        `json:"uc_prompt,omitempty"`
+	FullyCustomUcPrompt bool          `json:"fully_custom_uc_prompt,omitempty"`
+	Num                 int           `json:"num"`
+	Width               int           `json:"width,omitempty"`
+	Height              int           `json:"height,omitempty"`
+	InitImageURL        string        `json:"init_image_url,omitempty"`
+	InitWidth           int           `json:"init_width,omitempty"`
+	InitHeight          int           `json:"init_height,omitempty"`
+	CreativityDegree    int           `json:"creativity_degree,omitempty"`
+	InitImageSimilarity int           `json:"init_image_similarity,omitempty"`
+	SuperSizeMultiple   int           `json:"super_size_multiple,omitempty"`
+	PrefineMultiple     int           `json:"prefine_multiple,omitempty"`
+	ImageType           []string      `json:"image_type,omitempty"`
+	Style               []string      `json:"style,omitempty"`
+	Artist              string        `json:"artist,omitempty"`
+	Artists             []string      `json:"artists,omitempty"`
+	ElementMagic        []string      `json:"element_magic,omitempty"`
+	StyleDecoration     []string      `json:"style_decoration,omitempty"`
+	ModelParam          string        `json:"model_param,omitempty"`
+	AccelerateTimes     int           `json:"accelerate_times,omitempty"`
+	Vendor              int           `json:"vendor,omitempty"`
+	Character           []string      `json:"character,omitempty"`
+	ModelFusion         []ModelFusion `json:"model_fusion,omitempty"`
+	StyleModel          string        `json:"style_model,omitempty"`
+	Pattern             string        `json:"pattern,omitempty"`
+	PretreatmentMethod  string        `json:"pretreatment_method,omitempty"`
+	Steps               int           `json:"steps,omitempty"`
+	Cfg                 int           `json:"cfg,omitempty"`
+	SamplerIndex        int           `json:"sampler_index,omitempty"`
+	Seed                string        `json:"seed,omitempty"`
+	QueueType           int           `json:"queue_type,omitempty"`
+	CreateSource        int           `json:"create_source,omitempty"`
+	ClipSkip            int           `json:"clip_skip,omitempty"`
+	ControlWeight       int           `json:"control_weight,omitempty"`
+	ControlImg2Img      bool          `json:"control_img2_img,omitempty"`
+	ControlMode         int           `json:"control_mode,omitempty"`
+	DetectGrayNum       int           `json:"detect_gray_num,omitempty"`
+	NotifyURL           string        `json:"notify_url,omitempty"`
+	ServiceContext      struct {
 		Source         string `json:"source"`
 		From           string `json:"from"`
 		UserAgent      string `json:"user_agent"`
@@ -200,7 +197,7 @@ type CreateImageRequest struct {
 		DeviceId       string `json:"device_id"`
 		Ip             string `json:"ip"`
 		RegisterSource string `json:"register_source"`
-	} `json:"service_context"`
+	} `json:"service_context,omitempty"`
 	MultiDiffusion struct {
 		TiledDiffusion struct {
 			Enabled                     bool   `json:"enabled"`
@@ -246,10 +243,15 @@ type CreateImageRequest struct {
 			FastEncoder     bool `json:"fast_encoder"`
 			ColorFix        bool `json:"color_fix"`
 		} `json:"tiled_vae"`
-	} `json:"multi_diffusion"`
-	ServiceType int    `json:"service_type"`
-	Extra       string `json:"extra"`
-	ProMethod   string `json:"pro_method"`
+	} `json:"multi_diffusion,omitempty"`
+	ServiceType int    `json:"service_type,omitempty"`
+	Extra       string `json:"extra,omitempty"`
+	ProMethod   string `json:"pro_method,omitempty"`
+}
+
+type ModelFusion struct {
+	Key    string  `json:"key"`
+	Weight float64 `json:"weight"`
 }
 
 func (c *CreateImageRequest) String() string {
