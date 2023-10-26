@@ -61,12 +61,7 @@ func (c *Client) AddHttpHooks(hooks ...HttpHook) {
 	c.HttpHooks = append(c.HttpHooks, hooks...)
 }
 
-// Do do http request
-func (c *Client) Do(req *http.Request) (*http.Response, error) {
-	return c.do(req)
-}
-
-func (c *Client) do(req *http.Request) (*http.Response, error) {
+func (c *Client) do(req *http.Request, rawBody []byte) (*http.Response, error) {
 	for _, hook := range c.HttpHooks {
 		if err := hook.BeforeRequest(req); err != nil {
 			return nil, fmt.Errorf("hook.BeforeRequest: %w", err)
@@ -81,11 +76,13 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 		resp, err = c.httpClient.Do(req)
 		if err != nil {
 			err = fmt.Errorf("c.httpClient.Do error: %v", err)
+			req.Body = io.NopCloser(bytes.NewReader(rawBody))
 			continue
 		}
 		if resp.StatusCode < http.StatusOK || resp.StatusCode > 299 {
 			err = fmt.Errorf("http status code: %d, %s, trace_id: %v", resp.StatusCode,
 				http.StatusText(resp.StatusCode), getTraceID(resp))
+			req.Body = io.NopCloser(bytes.NewReader(rawBody))
 			continue
 		}
 		break
@@ -104,6 +101,7 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 
 func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, params url.Values, body interface{}) (*http.Response, error) {
 	apiParams := params.Encode()
+	var rawBody []byte
 	if apiParams != "" {
 		api = api + "?" + apiParams
 	}
@@ -116,16 +114,17 @@ func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, par
 		if err != nil {
 			return nil, fmt.Errorf("json.Marshal: marshal body error: %w", err)
 		}
+		rawBody = data
 		req.Body = io.NopCloser(bytes.NewReader(data))
 	}
 
 	// body must be set some data in Post
 	if httpMethod == http.MethodPost && body == nil {
-		emptyBody := []byte("{}")
-		req.Body = io.NopCloser(bytes.NewReader(emptyBody))
+		rawBody = []byte("{}")
+		req.Body = io.NopCloser(bytes.NewReader(rawBody))
 	}
 	req.Header.Set(ContentType, ApplicationJson)
-	return c.do(req)
+	return c.do(req, rawBody)
 }
 
 // CtxPostJson http post json
