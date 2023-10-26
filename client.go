@@ -103,7 +103,10 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 }
 
 func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, params url.Values, body interface{}) (*http.Response, error) {
-	api = api + "?" + params.Encode()
+	apiParams := params.Encode()
+	if apiParams != "" {
+		api = api + "?" + apiParams
+	}
 	req, err := http.NewRequestWithContext(ctx, httpMethod, api, nil)
 	if err != nil {
 		return nil, fmt.Errorf("http.NewRequestWithContext: url: %v, new request error: %w", api, err)
