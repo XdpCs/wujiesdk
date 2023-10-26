@@ -121,7 +121,7 @@ func (c *Client) ctxJson(ctx context.Context, httpMethod string, api string, par
 
 	// body must be set some data in Post
 	if httpMethod == http.MethodPost && body == nil {
-		emptyBody := []byte("")
+		emptyBody := []byte("{}")
 		req.Body = io.NopCloser(bytes.NewReader(emptyBody))
 	}
 	req.Header.Set(ContentType, ApplicationJson)
