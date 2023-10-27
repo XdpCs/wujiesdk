@@ -286,16 +286,11 @@ func (c *Client) CreateImage(ctx context.Context, cReq *CreateImageRequest) (*ht
 
 // GeneratingInfo get image generating info
 func (c *Client) GeneratingInfo(ctx context.Context, keys []string) (*http.Response, error) {
-	body := &struct {
-		Keys []string `json:"keys"`
-	}{
-		Keys: keys,
-	}
 	path, err := url.Parse(Domain + string(ImageGeneratingInfoWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageGeneratingInfoWujieRouter), err)
 	}
-	resp, err := c.CtxPostJson(ctx, path.String(), nil, body)
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, keys)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxPostJson: keys: %v, error: %w", keys, err)
 	}
