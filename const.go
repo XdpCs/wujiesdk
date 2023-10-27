@@ -112,6 +112,8 @@ const (
 
 func (w WujieCode) String() string {
 	switch w {
+	case OKWujieCode:
+		return "请求成功"
 	case InvalidParameterWujieCode:
 		return "非法参数"
 	case UnsupportedResolutionWujieCode:
