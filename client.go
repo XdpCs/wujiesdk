@@ -34,23 +34,71 @@ type Client struct {
 	MaxRetryTimes int          // max retry times
 	HttpHooks     HttpHooks    // hook before and after request
 	Credentials   *Credentials
-	Logger        *log.Logger
-	IsDebug       bool
+	Logger        *Logger
+}
+
+// Logger is the logger for wujie's api
+type Logger struct {
+	*log.Logger
+	LogLevel int
+}
+
+// NewLogger new logger
+func NewLogger(logLevel int, log *log.Logger) *Logger {
+	return newLogger(logLevel, log)
+}
+
+// NewDefaultLogger default logger
+func NewDefaultLogger() *Logger {
+	logger := log.New(os.Stdout, "", log.LstdFlags)
+	return newLogger(LogInfo, logger)
+}
+
+// NewDebugLogger debug logger
+func NewDebugLogger() *Logger {
+	logger := log.New(os.Stdout, "", log.LstdFlags)
+	return newLogger(LogDebug, logger)
+}
+
+func newLogger(logLevel int, log *log.Logger) *Logger {
+	return &Logger{
+		Logger:   log,
+		LogLevel: logLevel,
+	}
 }
 
 // NewDefaultClient all api need auth
 func NewDefaultClient(c *Credentials) *Client {
-	client := &Client{
-		httpClient: &http.Client{
-			Timeout: 200 * time.Second,
-			Transport: &http.Transport{
-				DisableKeepAlives: true,
-				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-			},
+	return newClient(newDefaultHttpClient(), 3, c, NewDefaultLogger())
+}
+
+// NewDebugClient log http request and response
+func NewDebugClient(c *Credentials) *Client {
+	client := newClient(newDefaultHttpClient(), 3, c, NewDebugLogger())
+	return client
+}
+
+// NewClient new client
+func NewClient(httpClient *http.Client, maxRetryTimes int, c *Credentials, logger *Logger) *Client {
+	return newClient(httpClient, maxRetryTimes, c, logger)
+}
+
+func newDefaultHttpClient() *http.Client {
+	return &http.Client{
+		Timeout: 200 * time.Second,
+		Transport: &http.Transport{
+			DisableKeepAlives: true,
+			TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
 		},
-		MaxRetryTimes: 3,
+	}
+}
+
+func newClient(httpClient *http.Client, maxRetryTimes int, c *Credentials, logger *Logger) *Client {
+	client := &Client{
+		httpClient:    httpClient,
+		MaxRetryTimes: maxRetryTimes,
 		Credentials:   c,
-		Logger:        log.New(os.Stdout, "", log.LstdFlags),
+		Logger:        logger,
 	}
 	client.AddHttpHooks(c)
 	return client
@@ -67,6 +115,10 @@ func (c *Client) do(req *http.Request, rawBody []byte) (*http.Response, error) {
 			return nil, fmt.Errorf("hook.BeforeRequest: %w", err)
 		}
 	}
+	// make sure request one time at least
+	if c.MaxRetryTimes <= 0 {
+		c.MaxRetryTimes = 1
+	}
 	var (
 		resp        *http.Response
 		err         error
@@ -80,6 +132,11 @@ func (c *Client) do(req *http.Request, rawBody []byte) (*http.Response, error) {
 		}
 		req.Body = io.NopCloser(requestBody)
 		resp, err = c.httpClient.Do(req)
+		if c.Logger.LogLevel == LogDebug {
+			c.LoggerHTTPReq(req)
+			// if this logger does not log response, response will be nil
+			c.LoggerHTTPResp(resp)
+		}
 		if err != nil {
 			err = fmt.Errorf("c.httpClient.Do error: %v", err)
 			continue
@@ -90,10 +147,6 @@ func (c *Client) do(req *http.Request, rawBody []byte) (*http.Response, error) {
 			continue
 		}
 		break
-	}
-	if err != nil {
-		c.LoggerHTTPReq(req)
-		c.LoggerHTTPResp(req, resp)
 	}
 
 	for _, hook := range c.HttpHooks {
@@ -182,13 +235,16 @@ func (c *Client) LoggerHTTPReq(req *http.Request) {
 		}
 		logBuffer.WriteString(fmt.Sprintf("\t%s:%s", k, valueBuffer.String()))
 	}
-	c.WriteLog(LogError, "%s\n", logBuffer.String())
+	c.WriteLog(LogDebug, "%s\n", logBuffer.String())
 }
 
 // LoggerHTTPResp Print Response to http request
-func (c *Client) LoggerHTTPResp(req *http.Request, resp *http.Response) {
+func (c *Client) LoggerHTTPResp(resp *http.Response) {
+	if resp == nil {
+		return
+	}
 	var logBuffer bytes.Buffer
-	logBuffer.WriteString(fmt.Sprintf("[Resp:%p]StatusCode:%d\t", req, resp.StatusCode))
+	logBuffer.WriteString(fmt.Sprintf("[Resp:%p]StatusCode:%d\t", resp, resp.StatusCode))
 	logBuffer.WriteString("Header info:")
 	for k, v := range resp.Header {
 		var valueBuffer bytes.Buffer
@@ -200,7 +256,7 @@ func (c *Client) LoggerHTTPResp(req *http.Request, resp *http.Response) {
 		}
 		logBuffer.WriteString(fmt.Sprintf("\t%s:%s", k, valueBuffer.String()))
 	}
-	c.WriteLog(LogError, "%s\n", logBuffer.String())
+	c.WriteLog(LogDebug, "%s\n", logBuffer.String())
 }
 
 // AvailableIntegralBalance get available integral balance
@@ -490,16 +546,11 @@ func (c *Client) CreateImagePro(ctx context.Context, cReq *CreateImageProRequest
 
 // GeneratingInfoPro get pro image generating info
 func (c *Client) GeneratingInfoPro(ctx context.Context, keys []string) (*http.Response, error) {
-	gReq := &struct {
-		Keys []string `json:"keys"`
-	}{
-		Keys: keys,
-	}
 	path, err := url.Parse(Domain + string(ImageGeneratingInfoProWujieRouter))
 	if err != nil {
 		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageGeneratingInfoProWujieRouter), err)
 	}
-	resp, err := c.CtxPostJson(ctx, path.String(), nil, gReq)
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, keys)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", keys, err)
 	}
