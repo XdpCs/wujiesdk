@@ -68,21 +68,25 @@ func (c *Client) do(req *http.Request, rawBody []byte) (*http.Response, error) {
 		}
 	}
 	var (
-		resp *http.Response
-		err  error
+		resp        *http.Response
+		err         error
+		requestBody *bytes.Reader
 	)
-
+	requestBody = bytes.NewReader(rawBody)
 	for i := 0; i < c.MaxRetryTimes; i++ {
+		_, err = requestBody.Seek(0, io.SeekStart)
+		if err != nil {
+			return nil, fmt.Errorf("requestBody.Seek: error: %w", err)
+		}
+		req.Body = io.NopCloser(requestBody)
 		resp, err = c.httpClient.Do(req)
 		if err != nil {
 			err = fmt.Errorf("c.httpClient.Do error: %v", err)
-			req.Body = io.NopCloser(bytes.NewReader(rawBody))
 			continue
 		}
 		if resp.StatusCode < http.StatusOK || resp.StatusCode > 299 {
 			err = fmt.Errorf("http status code: %d, %s, trace_id: %v", resp.StatusCode,
 				http.StatusText(resp.StatusCode), getTraceID(resp))
-			req.Body = io.NopCloser(bytes.NewReader(rawBody))
 			continue
 		}
 		break
