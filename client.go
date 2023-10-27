@@ -74,7 +74,7 @@ func (c *Client) do(req *http.Request, rawBody []byte) (*http.Response, error) {
 	)
 	requestBody = bytes.NewReader(rawBody)
 	for i := 0; i < c.MaxRetryTimes; i++ {
-		_, err := requestBody.Seek(0, io.SeekStart)
+		_, err = requestBody.Seek(0, io.SeekStart)
 		if err != nil {
 			return nil, fmt.Errorf("requestBody.Seek: error: %w", err)
 		}
