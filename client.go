@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-21 19:51
+// @Update       XdpCs 2023-11-06 09:30
 
 import (
 	"bytes"
@@ -712,6 +712,64 @@ func (c *Client) CreateVideo(ctx context.Context, cReq *CreateVideoRequest) (*ht
 	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// VideoInfo get video info
+func (c *Client) VideoInfo(ctx context.Context, key string) (*http.Response, error) {
+	values := url.Values{
+		"key": []string{key},
+	}
+	path, err := url.Parse(Domain + string(VideoInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(VideoInfoWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: req: %v, error: %w", key, err)
+	}
+	return resp, nil
+}
+
+// VideoOptionMenuAndPriceTable get video option menu and price table
+func (c *Client) VideoOptionMenuAndPriceTable(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(VideoOptionMenuAndPriceTableWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(VideoOptionMenuAndPriceTableWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// VideoModelQueueInfo get video queue info
+func (c *Client) VideoModelQueueInfo(ctx context.Context, model int32) (*http.Response, error) {
+	values := url.Values{
+		"modelCode": []string{fmt.Sprintf("%d", model)},
+	}
+	path, err := url.Parse(Domain + string(VideoModelQueueInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(VideoModelQueueInfoWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: req: %v, error: %w", model, err)
+	}
+	return resp, nil
+}
+
+// VideoGeneratingInfo get video generating info
+func (c *Client) VideoGeneratingInfo(ctx context.Context, keys []string) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(VideoGeneratingInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(VideoGeneratingInfoWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, keys)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", keys, err)
 	}
 	return resp, nil
 }

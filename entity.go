@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        entity.go
 // @Description  entity
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-23 15:00
+// @Update       XdpCs 2023-11-06 09:30
 
 import (
 	"fmt"
@@ -992,4 +992,162 @@ type CreateVideoResponse struct {
 	Data struct {
 		Key string `json:"key"`
 	} `json:"data"`
+}
+
+type VideoInfoResponse struct {
+	BaseResponse
+	Data VideoInfo `json:"data"`
+}
+
+type VideoInfo struct {
+	Key             string  `json:"key"`
+	ModelCode       int     `json:"model_code"`
+	ModelName       string  `json:"model_name"`
+	OriginVideoUrl  string  `json:"origin_video_url"`
+	AiVideoUrl      string  `json:"ai_video_url"`
+	Status          int     `json:"status"`
+	CreateTime      int     `json:"create_time"`
+	CompleteTime    int     `json:"complete_time"`
+	ExpectedSeconds int     `json:"expected_seconds"`
+	CompletePercent float64 `json:"complete_percent"`
+	AiVideoMetaInfo struct {
+		Format    string `json:"format"`
+		Width     int    `json:"width"`
+		Height    int    `json:"height"`
+		Duration  int    `json:"duration"`
+		Size      int    `json:"size"`
+		CodecType string `json:"codec_type"`
+		FrameRate int    `json:"frame_rate"`
+		Cover     struct {
+			Url    string `json:"url"`
+			Width  int    `json:"width"`
+			Height int    `json:"height"`
+		} `json:"cover"`
+	} `json:"ai_video_meta_info"`
+	Violation     bool `json:"violation"`
+	ViolationInfo struct {
+		CheckFail       bool   `json:"check_fail"`
+		TotalSuggestion string `json:"total_suggestion"`
+		DataId          string `json:"data_id"`
+		TaskId          string `json:"task_id"`
+		Url             string `json:"url"`
+		SourceResult    string `json:"source_result"`
+		VendorApp       string `json:"vendor_app"`
+		ScreenshotNums  int    `json:"_screenshot_nums"`
+		ScreenshotInfos []struct {
+			Url           string `json:"url"`
+			ScanSceneDTOS []struct {
+				Scene      string  `json:"scene"`
+				Label      string  `json:"label"`
+				LabelDesc  string  `json:"label_desc"`
+				Suggestion string  `json:"suggestion"`
+				Rate       float64 `json:"rate"`
+				SubLabels  []struct {
+					SubLabel     string  `json:"sub_label"`
+					SubLabelDesc string  `json:"sub_label_desc"`
+					Rate         float64 `json:"rate"`
+				} `json:"sub_labels"`
+			} `json:"scan_scene_d_t_o_s"`
+		} `json:"screenshot_infos"`
+	} `json:"violation_info"`
+	FailMessage struct {
+		FailCode    int    `json:"fail_code"`
+		FailMessage string `json:"fail_message"`
+	} `json:"fail_message"`
+	QueueType int `json:"queue_type"`
+}
+
+type VideoOptionMenuAndPriceTableResponse struct {
+	BaseResponse
+	Data VideoOptionMenuAndPriceTable `json:"data"`
+}
+
+type VideoOptionMenuAndPriceTable struct {
+	AiVideoModelOptionVos []struct {
+		ModelCode int    `json:"model_code"`
+		Name      string `json:"name"`
+	} `json:"ai_video_model_option_vos"`
+	PayInfoVo struct {
+		Price      int `json:"price"`
+		NightPrice int `json:"night_price"`
+	} `json:"pay_info_vo"`
+}
+
+type VideoModelQueueInfoResponse struct {
+	BaseResponse
+	Data VideoModelQueueInfo `json:"data"`
+}
+
+type VideoModelQueueInfo struct {
+	FreeExpectedSeconds int `json:"free_expected_seconds"`
+	NightExpectedTime   int `json:"night_expected_time"`
+	QueueNum            int `json:"queue_num"`
+}
+
+type VideoGeneratingInfoResponse struct {
+	BaseResponse
+	Data VideoGeneratingInfo `json:"data"`
+}
+
+type VideoGeneratingInfo struct {
+	List            []VideoGeneratingInfoDetail `json:"list"`
+	NextPollingTime int                         `json:"next_polling_time"`
+}
+
+type VideoGeneratingInfoDetail struct {
+	Key             string  `json:"key"`
+	ModelCode       int     `json:"model_code"`
+	ModelName       string  `json:"model_name"`
+	OriginVideoUrl  string  `json:"origin_video_url"`
+	AiVideoUrl      string  `json:"ai_video_url"`
+	Status          int     `json:"status"`
+	CreateTime      int     `json:"create_time"`
+	CompleteTime    int     `json:"complete_time"`
+	ExpectedSeconds int     `json:"expected_seconds"`
+	CompletePercent float64 `json:"complete_percent"`
+	AiVideoMetaInfo struct {
+		Format    string `json:"format"`
+		Width     int    `json:"width"`
+		Height    int    `json:"height"`
+		Duration  int    `json:"duration"`
+		Size      int    `json:"size"`
+		CodecType string `json:"codec_type"`
+		FrameRate int    `json:"frame_rate"`
+		Cover     struct {
+			Url    string `json:"url"`
+			Width  int    `json:"width"`
+			Height int    `json:"height"`
+		} `json:"cover"`
+	} `json:"ai_video_meta_info"`
+	Violation     bool `json:"violation"`
+	ViolationInfo struct {
+		CheckFail       bool   `json:"check_fail"`
+		TotalSuggestion string `json:"total_suggestion"`
+		DataId          string `json:"data_id"`
+		TaskId          string `json:"task_id"`
+		Url             string `json:"url"`
+		SourceResult    string `json:"source_result"`
+		VendorApp       string `json:"vendor_app"`
+		ScreenshotNums  int    `json:"_screenshot_nums"`
+		ScreenshotInfos []struct {
+			Url           string `json:"url"`
+			ScanSceneDTOS []struct {
+				Scene      string  `json:"scene"`
+				Label      string  `json:"label"`
+				LabelDesc  string  `json:"label_desc"`
+				Suggestion string  `json:"suggestion"`
+				Rate       float64 `json:"rate"`
+				SubLabels  []struct {
+					SubLabel     string  `json:"sub_label"`
+					SubLabelDesc string  `json:"sub_label_desc"`
+					Rate         float64 `json:"rate"`
+				} `json:"sub_labels"`
+			} `json:"scan_scene_d_t_o_s"`
+		} `json:"screenshot_infos"`
+	} `json:"violation_info"`
+	FailMessage struct {
+		FailCode    int    `json:"fail_code"`
+		FailMessage string `json:"fail_message"`
+	} `json:"fail_message"`
+	QueueType int `json:"queue_type"`
 }
