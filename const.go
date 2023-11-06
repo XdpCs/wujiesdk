@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-21 19:30
+// @Update       XdpCs 2023-11-06 09:30
 
 import (
 	"fmt"
@@ -72,9 +72,8 @@ const (
 const (
 	CreateVideoWujieRouter                  WujieRouter = "/ai/video/create"
 	VideoInfoWujieRouter                    WujieRouter = "/ai/video/info"
-	VideoPriceInfoWujieRouter               WujieRouter = "/ai/video/price_info"
 	VideoOptionMenuAndPriceTableWujieRouter WujieRouter = "/ai/video/option_menu"
-	VideoWaitTimeWujieRouter                WujieRouter = "/ai/video/wait_time"
+	VideoModelQueueInfoWujieRouter          WujieRouter = "/ai/video/wait_time"
 	VideoGeneratingInfoWujieRouter          WujieRouter = "/ai/video/generating_info"
 )
 

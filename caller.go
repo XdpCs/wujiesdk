@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-21 19:51
+// @Update       XdpCs 2023-11-06 09:30
 
 import (
 	"context"
@@ -658,6 +658,86 @@ func (c *Caller) CreateVideo(ctx context.Context, cReq *CreateVideoRequest) (Wuj
 			getTraceID(resp), err, cResp.Message, cReq.String())
 	}
 	return code, cResp.Data.Key, nil
+}
+
+// VideoInfo get video info
+func (c *Caller) VideoInfo(ctx context.Context, key string) (WujieCode, *VideoInfo, error) {
+	resp, err := c.Client.VideoInfo(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.VideoInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var vResp VideoInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&vResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(vResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, vResp.Message, key)
+	}
+	return code, &vResp.Data, nil
+}
+
+// VideoOptionMenuAndPriceTable get video option menu and price table
+func (c *Caller) VideoOptionMenuAndPriceTable(ctx context.Context) (WujieCode, *VideoOptionMenuAndPriceTable, error) {
+	resp, err := c.Client.VideoOptionMenuAndPriceTable(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.VideoOptionMenuAndPriceTable: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var vResp VideoOptionMenuAndPriceTableResponse
+	if err := json.NewDecoder(resp.Body).Decode(&vResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(vResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, vResp.Message)
+	}
+	return code, &vResp.Data, nil
+}
+
+// VideoModelQueueInfo get video queue info
+func (c *Caller) VideoModelQueueInfo(ctx context.Context, model int32) (WujieCode, *VideoModelQueueInfo, error) {
+	resp, err := c.Client.VideoModelQueueInfo(ctx, model)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.VideoModelQueueInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var vResp VideoModelQueueInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&vResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(vResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, vResp.Message)
+	}
+	return code, &vResp.Data, nil
+}
+
+// VideoGeneratingInfo get video generating info
+func (c *Caller) VideoGeneratingInfo(ctx context.Context, keys []string) (WujieCode, *VideoGeneratingInfo, error) {
+	resp, err := c.Client.VideoGeneratingInfo(ctx, keys)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.VideoGeneratingInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var vResp VideoGeneratingInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&vResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(vResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, vResp.Message)
+	}
+	return code, &vResp.Data, nil
 }
 
 func getTraceID(resp *http.Response) string {
