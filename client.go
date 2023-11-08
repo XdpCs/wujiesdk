@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-06 09:30
+// @Update       XdpCs 2023-11-08 09:30
 
 import (
 	"bytes"
@@ -553,6 +553,66 @@ func (c *Client) GeneratingInfoPro(ctx context.Context, keys []string) (*http.Re
 	resp, err := c.CtxPostJson(ctx, path.String(), nil, keys)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxJson: req: %v, error: %w", keys, err)
+	}
+	return resp, nil
+}
+
+// AccountBalancePro get account balance pro
+func (c *Client) AccountBalancePro(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(AccountBalanceProWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(AccountBalanceProWujieRouter), err)
+	}
+	body := struct {
+		ResourceType string `json:"resourceType"`
+	}{
+		ResourceType: "AI_PRO_ACCOUNT",
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, body)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// ModelBaseInfosPro get model base infos pro
+func (c *Client) ModelBaseInfosPro(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(ModelBaseInfosProWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ModelBaseInfosProWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// ControlNetOptionPro control net option pro
+func (c *Client) ControlNetOptionPro(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(ControlNetOptionProWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ControlNetOptionProWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// ImageInfoPro get image info pro
+func (c *Client) ImageInfoPro(ctx context.Context, key string) (*http.Response, error) {
+	values := url.Values{
+		"key": []string{key},
+	}
+	path, err := url.Parse(Domain + string(ImageInfoProWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(ImageInfoProWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: req: %v, error: %w", key, err)
 	}
 	return resp, nil
 }

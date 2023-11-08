@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-06 09:30
+// @Update       XdpCs 2023-11-08 09:30
 
 import (
 	"context"
@@ -63,7 +63,7 @@ func (c *Caller) ExchangePoint(ctx context.Context, eReq *ExchangePointRequest) 
 }
 
 // ModelBaseInfos get model base infos
-func (c *Caller) ModelBaseInfos(ctx context.Context) (WujieCode, []ModelBaseInfoData, error) {
+func (c *Caller) ModelBaseInfos(ctx context.Context) (WujieCode, []ModelBaseInfo, error) {
 	resp, err := c.Client.ModelBaseInfos(ctx)
 	if err != nil {
 		return ErrorWujieCode, nil, fmt.Errorf("c.Client.ModelBaseInfos: %w", err)
@@ -437,6 +437,84 @@ func (c *Caller) GeneratingInfoPro(ctx context.Context, keys []string) (WujieCod
 			getTraceID(resp), err, gResp.Message, keys)
 	}
 	return code, gResp.Data.Infos, nil
+}
+
+// AccountBalancePro get account balance pro
+func (c *Caller) AccountBalancePro(ctx context.Context) (WujieCode, int, error) {
+	resp, err := c.Client.AccountBalancePro(ctx)
+	if err != nil {
+		return ErrorWujieCode, 0, fmt.Errorf("c.Client.AccountBalancePro: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var aResp AccountBalanceProResponse
+	if err := json.NewDecoder(resp.Body).Decode(&aResp); err != nil {
+		return ErrorWujieCode, 0, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(aResp.Code)
+	if err := code.Err(); err != nil {
+		return code, 0, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s", getTraceID(resp), err, aResp.Message)
+	}
+	return code, aResp.Data.ResourceBalance, nil
+}
+
+// ModelBaseInfosPro get model base infos pro
+func (c *Caller) ModelBaseInfosPro(ctx context.Context) (WujieCode, []ModelBaseInfoPro, error) {
+	resp, err := c.Client.ModelBaseInfosPro(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.ModelBaseInfosPro: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var mResp ModelBaseInfosProResponse
+	if err := json.NewDecoder(resp.Body).Decode(&mResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(mResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s", getTraceID(resp), err, mResp.Message)
+	}
+	return code, mResp.Data, nil
+}
+
+// ControlNetOptionPro control net option pro
+func (c *Caller) ControlNetOptionPro(ctx context.Context) (WujieCode, []ControlNetOptionPro, error) {
+	resp, err := c.Client.ControlNetOptionPro(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.ControlNetOptionPro: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp ControlNetOptionProResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, cResp.Message)
+	}
+	return code, cResp.Data, nil
+}
+
+// ImageInfoPro get image info pro
+func (c *Caller) ImageInfoPro(ctx context.Context, key string) (WujieCode, *ImageInfoPro, error) {
+	resp, err := c.Client.ImageInfoPro(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.ImageInfoPro: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var iResp ImageInfoProResponse
+	if err := json.NewDecoder(resp.Body).Decode(&iResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+	code := WujieCode(iResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, iResp.Message, key)
+	}
+	return code, &iResp.Data, nil
 }
 
 // CreateAvatar create avatar
