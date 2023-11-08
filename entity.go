@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        entity.go
 // @Description  entity
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-06 09:30
+// @Update       XdpCs 2023-11-08 09:30
 
 import (
 	"fmt"
@@ -33,10 +33,10 @@ func (e *ExchangePointRequest) String() string {
 
 type ModelBaseInfosResponse struct {
 	BaseResponse
-	Data []ModelBaseInfoData `json:"data"`
+	Data []ModelBaseInfo `json:"data"`
 }
 
-type ModelBaseInfoData struct {
+type ModelBaseInfo struct {
 	ModelType         int32  `json:"type"`
 	ModelCode         int32  `json:"model_code"`
 	ModelVersion      string `json:"model_version"`
@@ -1150,4 +1150,199 @@ type VideoGeneratingInfoDetail struct {
 		FailMessage string `json:"fail_message"`
 	} `json:"fail_message"`
 	QueueType int `json:"queue_type"`
+}
+
+type AccountBalanceProResponse struct {
+	BaseResponse
+	Data struct {
+		ResourceBalance int `json:"resourceBalance"`
+	} `json:"data"`
+}
+
+type ModelBaseInfosProResponse struct {
+	BaseResponse
+	Data []ModelBaseInfoPro `json:"data"`
+}
+
+type ModelBaseInfoPro struct {
+	Type              int    `json:"type"`
+	ModelCode         int    `json:"model_code"`
+	ModelVersion      string `json:"model_version"`
+	ModelDesc         string `json:"model_desc"`
+	ControlnetSupport string `json:"controlnet_support"`
+}
+
+type ControlNetOptionProResponse struct {
+	BaseResponse
+	Data []ControlNetOptionPro `json:"data"`
+}
+
+type ControlNetOptionPro struct {
+	Code  int    `json:"code"`
+	Name  string `json:"name"`
+	Model []struct {
+		Code      int    `json:"code"`
+		Name      string `json:"name"`
+		IsDefault bool   `json:"is_default"`
+	} `json:"model"`
+	Preprocessor []struct {
+		Code       int    `json:"code"`
+		Name       string `json:"name"`
+		Resolution struct {
+			Name   string `json:"name"`
+			Min    int    `json:"min"`
+			Max    int    `json:"max"`
+			Step   int    `json:"step"`
+			Value  int    `json:"value"`
+			NameCn string `json:"name_cn"`
+		} `json:"resolution"`
+		ThresholdA struct {
+			Name   string `json:"name"`
+			Min    int    `json:"min"`
+			Max    int    `json:"max"`
+			Step   int    `json:"step"`
+			Value  int    `json:"value"`
+			NameCn string `json:"name_cn"`
+		} `json:"threshold_a"`
+		ThresholdB struct {
+			Name   string `json:"name"`
+			Min    int    `json:"min"`
+			Max    int    `json:"max"`
+			Step   int    `json:"step"`
+			Value  int    `json:"value"`
+			NameCn string `json:"name_cn"`
+		} `json:"threshold_b"`
+		IsDefault bool `json:"is_default"`
+	} `json:"preprocessor"`
+}
+
+type ImageInfoProResponse struct {
+	BaseResponse
+	Data ImageInfoPro `json:"data"`
+}
+
+type ImageInfoPro struct {
+	ModelCode         int     `json:"model_code"`
+	Prompt            string  `json:"prompt"`
+	Width             int     `json:"width"`
+	Height            int     `json:"height"`
+	SupersizeMultiple float64 `json:"supersize_multiple"`
+	PrefineMultiple   float64 `json:"prefine_multiple"`
+	OptionInfo        struct {
+		StyleModel  string   `json:"style_model"`
+		Character   []string `json:"character"`
+		ModelFusion []struct {
+			Name   string  `json:"name"`
+			Weight float64 `json:"weight"`
+		} `json:"model_fusion"`
+	} `json:"option_info"`
+	AdvancedInfo struct {
+		UcPrompt     string  `json:"uc_prompt"`
+		RestoreFaces bool    `json:"restore_faces"`
+		Tilling      bool    `json:"tilling"`
+		Seed         string  `json:"seed"`
+		VaeFile      string  `json:"vae_file"`
+		Cfg          float64 `json:"cfg"`
+		SamplerSteps int     `json:"sampler_steps"`
+		SamplerIndex int     `json:"sampler_index"`
+		ClipSkip     int     `json:"clip_skip"`
+		Ensd         float64 `json:"ensd"`
+		HiresFixInfo struct {
+			DenoisingStrength float64 `json:"denoising_strength"`
+		} `json:"hires_fix_info"`
+	} `json:"advanced_info"`
+	ImgToImgInfo struct {
+		InitImageUrl     string `json:"init_image_url"`
+		CreativityDegree int    `json:"creativity_degree"`
+		ResizeMode       string `json:"resize_mode"`
+	} `json:"img_to_img_info"`
+	ControlNetInfo []struct {
+		Type                 int    `json:"type"`
+		Preprocessor         int    `json:"preprocessor"`
+		Model                int    `json:"model"`
+		ControlWeight        int    `json:"control_weight"`
+		StartingControlStep  int    `json:"starting_control_step"`
+		EndingControlStep    int    `json:"ending_control_step"`
+		ControlMode          int    `json:"control_mode"`
+		ImageUrl             string `json:"image_url"`
+		ImageWidth           int    `json:"image_width"`
+		ImageHeight          int    `json:"image_height"`
+		MaskUrl              string `json:"mask_url"`
+		ProcessorRes         int    `json:"processor_res"`
+		ThresholdA           int    `json:"threshold_a"`
+		ThresholdB           int    `json:"threshold_b"`
+		ResizeMode           int    `json:"resize_mode"`
+		PixelPerfect         bool   `json:"pixel_perfect"`
+		PretreatmentImageUrl string `json:"pretreatment_image_url"`
+	} `json:"control_net_info"`
+	CostInfo struct {
+		DurationCost int `json:"duration_cost"`
+	} `json:"cost_info"`
+	InpaintingPlugin struct {
+		MaskImageUrl          string `json:"mask_image_url"`
+		MaskZoneImageUrl      string `json:"mask_zone_image_url"`
+		MaskBlur              int    `json:"mask_blur"`
+		InpaintingFill        int    `json:"inpainting_fill"`
+		InpaintingMaskInvert  bool   `json:"inpainting_mask_invert"`
+		InpaintFullResPadding int    `json:"inpaint_full_res_padding"`
+		InpaintFullRes        bool   `json:"inpaint_full_res"`
+	} `json:"inpainting_plugin"`
+	TiledDiffusion struct {
+		Enabled           bool `json:"enabled"`
+		DrawBackground    bool `json:"draw_background"`
+		BboxControlStates []struct {
+			Enabled    bool    `json:"enabled"`
+			X          float64 `json:"x"`
+			Y          float64 `json:"y"`
+			W          float64 `json:"w"`
+			H          float64 `json:"h"`
+			Prompt     string  `json:"prompt"`
+			NegPrompt  string  `json:"neg_prompt"`
+			BlendMode  string  `json:"blend_mode"`
+			Seed       int     `json:"seed"`
+			OptionInfo struct {
+				CharacterOptions []struct {
+					Key string `json:"key"`
+				} `json:"character_options"`
+				ModelFusion []struct {
+					Name   string  `json:"name"`
+					Weight float64 `json:"weight"`
+				} `json:"model_fusion"`
+			} `json:"option_info"`
+		} `json:"bbox_control_states"`
+	} `json:"tiled_diffusion"`
+	FaceEditor struct {
+		Enabled             bool     `json:"enabled"`
+		UseMinimalArea      bool     `json:"use_minimal_area"`
+		AffectedAreas       []string `json:"affected_areas"`
+		MaskSize            int      `json:"mask_size"`
+		MaskBlur            int      `json:"mask_blur"`
+		MaxFaceCount        int      `json:"max_face_count"`
+		Confidence          float64  `json:"confidence"`
+		FaceMargin          float64  `json:"face_margin"`
+		FaceSize            int      `json:"face_size"`
+		IgnoreLargerFaces   bool     `json:"ignore_larger_faces"`
+		Strength1           float64  `json:"strength1"`
+		ApplyInsideMaskOnly bool     `json:"apply_inside_mask_only"`
+		Strength2           float64  `json:"strength2"`
+		PromptForFace       string   `json:"prompt_for_face"`
+	} `json:"face_editor"`
+	UltimateUpscale struct {
+		Enabled         bool    `json:"enabled"`
+		TargetSizeType  int     `json:"target_size_type"`
+		UpscalerIndex   int     `json:"upscaler_index"`
+		RedrawMode      int     `json:"redraw_mode"`
+		TileWidth       int     `json:"tile_width"`
+		TileHeight      int     `json:"tile_height"`
+		MaskBlur        int     `json:"mask_blur"`
+		SeamsFixType    int     `json:"seams_fix_type"`
+		SeamsFixWidth   int     `json:"seams_fix_width"`
+		SeamsFixDenoise float64 `json:"seams_fix_denoise"`
+		SeamsFixPadding int     `json:"seams_fix_padding"`
+	} `json:"ultimate_upscale"`
+	Adetailer []struct {
+		AdModel          string `json:"ad_model"`
+		AdNegativePrompt string `json:"ad_negative_prompt"`
+		AdPrompt         string `json:"ad_prompt"`
+	} `json:"adetailer"`
 }

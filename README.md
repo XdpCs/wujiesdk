@@ -14,7 +14,7 @@
 `go get`
 
 ```shell
-go get -u github.com/XdpCs/wujiesdk
+go get -u github.com/XdpCs/wujiesdk@master
 ```
 
 `go mod`
@@ -46,14 +46,15 @@ require github.com/XdpCs/wujiesdk latest
     - [x] 图片年轻化接口
     - [x] 作画咒语查询
     - [x] 查询描述词优化任务结果
-- [x] 化身训练
-    - [x] 化身训练图片检测
-    - [x] 化身详情查询
-    - [x] 化身删除
-    - [x] 创建化身
-- [x] 化身作画
-    - [x] 化身作画接口
-    - [x] 化身作画资源选项接口
+- [x] 化身
+    - [x] 化身训练
+        - [x] 化身训练图片检测
+        - [x] 化身详情查询
+        - [x] 化身删除
+        - [x] 创建化身
+    - [x] 化身作画
+        - [x] 化身作画接口
+        - [x] 化身作画资源选项接口
 - [x] 咒语解析
     - [x] 发起咒语解析
     - [x] 查询解析结果
@@ -67,14 +68,18 @@ require github.com/XdpCs/wujiesdk latest
     - [x] 获取视频生视频模型列表及价格表
     - [x] 视频生视频模型排队情况查询
     - [x] 视频生成结果查询
+- [ ] 个性相机
+    - [ ] 作画模版选项
+    - [ ] 作画
+    - [ ] 相机作画轮询接口
+    - [ ] 相机作画查询接口
 - [ ] Ai专业版作画
     - [x] 专业版发起AI作画
     - [x] 专业版作画轮询接口
-    - [ ] 专业版作画查询接口
-    - [ ] ControlNet type preprocessor model 参数依赖关系查询
-    - [ ] 获取专业版模型列表
-    - [ ] 账户时长余额
-    - [ ] 账户账单
+    - [x] 专业版作画查询接口
+    - [x] ControlNet type preprocessor model 参数依赖关系查询
+    - [x] 获取专业版模型列表
+    - [x] 账户时长余额
     - [ ] Ai实验室
         - [ ] 分割一切
         - [ ] 矢量图

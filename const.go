@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-06 09:30
+// @Update       XdpCs 2023-11-08 09:30
 
 import (
 	"fmt"
@@ -18,6 +18,7 @@ type WujieRouter string
 const (
 	AvailableIntegralBalanceWujieRouter WujieRouter = "/account/availableIntegralBalance"
 	ExchangePointWujieRouter            WujieRouter = "/account/integral/exchange"
+	AccountBalanceProWujieRouter        WujieRouter = "/ai/pro/account/balance"
 )
 
 // common ai WujieRouter
@@ -44,6 +45,9 @@ const (
 const (
 	CreateImageProWujieRouter         WujieRouter = "/ai/pro/create"
 	ImageGeneratingInfoProWujieRouter WujieRouter = "/ai/pro/generating_info"
+	ModelBaseInfosProWujieRouter      WujieRouter = "/ai/pro/model_base_infos"
+	ControlNetOptionProWujieRouter    WujieRouter = "/ai/pro/controlNetOption"
+	ImageInfoProWujieRouter           WujieRouter = "/ai/pro/info"
 )
 
 // avatar create artwork WujieRouter
