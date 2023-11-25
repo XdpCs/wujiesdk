@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-08 09:30
+// @Update       XdpCs 2023-11-25 21:13
 
 import (
 	"fmt"
@@ -79,6 +79,14 @@ const (
 	VideoOptionMenuAndPriceTableWujieRouter WujieRouter = "/ai/video/option_menu"
 	VideoModelQueueInfoWujieRouter          WujieRouter = "/ai/video/wait_time"
 	VideoGeneratingInfoWujieRouter          WujieRouter = "/ai/video/generating_info"
+)
+
+// create avatar camera WujieRouter
+const (
+	CameraTemplateOptionsWujieRouter WujieRouter = "/avatar/camera/template_options"
+	CreateCameraWujieRouter          WujieRouter = "/avatar/camera/create"
+	CameraGeneratingInfoWujieRouter  WujieRouter = "/avatar/camera/generating_info"
+	CameraInfoWujieRouter            WujieRouter = "/avatar/camera/info"
 )
 
 const DefaultExpiration = 4 * time.Minute

@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        credentials.go
 // @Description  sign request
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-10-17 10:21
+// @Update       XdpCs 2023-11-25 21:13
 
 import (
 	"crypto"
@@ -28,7 +28,7 @@ type Credentials struct {
 	RsaPrivateKey *rsa.PrivateKey
 }
 
-// Sign sign the request
+// Sign the request
 func (c *Credentials) Sign(req *http.Request) (*http.Request, error) {
 	auth, found := c.cache.Get(HTTPHeaderAuthorization)
 	if !found {

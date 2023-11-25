@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        entity.go
 // @Description  entity
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-08 09:30
+// @Update       XdpCs 2023-11-25 21:13
 
 import (
 	"fmt"
@@ -196,6 +196,10 @@ type CreateImageRequest struct {
 	ProMethod           string          `json:"pro_method,omitempty"`
 }
 
+func (c *CreateImageRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
 type MultiDiffusion struct {
 	TiledDiffusion struct {
 		Enabled                     bool   `json:"enabled"`
@@ -243,6 +247,10 @@ type MultiDiffusion struct {
 	} `json:"tiled_vae"`
 }
 
+func (m *MultiDiffusion) String() string {
+	return fmt.Sprintf("%+v", *m)
+}
+
 type ServiceContext struct {
 	Source         string `json:"source"`
 	From           string `json:"from"`
@@ -253,13 +261,13 @@ type ServiceContext struct {
 	RegisterSource string `json:"register_source"`
 }
 
+func (s *ServiceContext) String() string {
+	return fmt.Sprintf("%+v", *s)
+}
+
 type ModelFusion struct {
 	Key    string  `json:"key"`
 	Weight float64 `json:"weight"`
-}
-
-func (c *CreateImageRequest) String() string {
-	return fmt.Sprintf("%+v", *c)
 }
 
 type CreateImageResponse struct {
@@ -1345,4 +1353,104 @@ type ImageInfoPro struct {
 		AdNegativePrompt string `json:"ad_negative_prompt"`
 		AdPrompt         string `json:"ad_prompt"`
 	} `json:"adetailer"`
+}
+
+type CameraTemplateOptionsResponse struct {
+	BaseResponse
+	Data []CameraTemplateOption `json:"data"`
+}
+
+type CameraTemplateOption struct {
+	Key      string `json:"_key"`
+	Category string `json:"category"`
+	Url      string `json:"url"`
+}
+
+type CreateCameraRequest struct {
+	AvtarKey              string                 `json:"avtar_key"`
+	CameraArtworkAdvanced *CameraArtworkAdvanced `json:"camera_artwork_advanced"`
+	TemplateCreateParam   *TemplateCreateParam   `json:"template_create_param"`
+}
+
+func (c *CreateCameraRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CameraArtworkAdvanced struct {
+	FirstDiffusionSteps     int     `json:"first_diffusion_steps"`
+	FirstDenoisingStrength  float64 `json:"first_denoising_strength"`
+	SecondDiffusionSteps    int     `json:"second_diffusion_steps"`
+	SecondDenoisingStrength float64 `json:"second_denoising_strength"`
+	CropFacePreprocess      bool    `json:"crop_face_preprocess"`
+	BeforeFaceFusionRatio   float64 `json:"before_face_fusion_ratio"`
+	AfterFaceFusionRatio    float64 `json:"after_face_fusion_ratio"`
+	ApplyFaceFusionBefore   bool    `json:"apply_face_fusion_before"`
+	ApplyFaceFusionAfter    bool    `json:"apply_face_fusion_after"`
+	ColorShiftMiddle        bool    `json:"color_shift_middle"`
+	ColorShiftLast          bool    `json:"color_shift_last"`
+	SuperResolution         bool    `json:"super_resolution"`
+	BackgroundRestore       bool    `json:"background_restore"`
+}
+
+func (c *CameraArtworkAdvanced) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type TemplateCreateParam struct {
+	TemplateKey string `json:"template_key"`
+	TemplateUrl string `json:"template_url"`
+	Count       int    `json:"count"`
+}
+
+func (t *TemplateCreateParam) String() string {
+	return fmt.Sprintf("%+v", *t)
+}
+
+type CreateCameraResponse struct {
+	BaseResponse
+	Data CreateCameraResult `json:"data"`
+}
+
+type CreateCameraResult struct {
+	Keys                 []string `json:"keys"`
+	ExpectedDurationCost int      `json:"expected_duration_cost"`
+}
+
+type CameraGeneratingInfoResponse struct {
+	BaseResponse
+	Data struct {
+		Infos []CameraGeneratingInfo `json:"infos"`
+	} `json:"data"`
+}
+
+type CameraGeneratingInfo struct {
+	Key             string  `json:"key"`
+	Status          int     `json:"status"`
+	ArtworkUrl      string  `json:"artwork_url"`
+	ExpectedSeconds int     `json:"expected_seconds"`
+	StartGenTime    int     `json:"start_gen_time"`
+	CompleteTime    int     `json:"complete_time"`
+	CompletePercent float64 `json:"complete_percent"`
+	FailMessage     struct {
+		FailCode    int    `json:"fail_code"`
+		FailMessage string `json:"fail_message"`
+	} `json:"fail_message"`
+}
+
+type CameraInfoResponse struct {
+	BaseResponse
+	Data CameraInfo `json:"data"`
+}
+
+type CameraInfo struct {
+	Key         string `json:"key"`
+	Status      int    `json:"status"`
+	ArtworkUrl  string `json:"artwork_url"`
+	Width       int    `json:"width"`
+	Height      int    `json:"height"`
+	Seed        string `json:"seed"`
+	FailMessage struct {
+		FailCode    int    `json:"fail_code"`
+		FailMessage string `json:"fail_message"`
+	} `json:"fail_message"`
 }
