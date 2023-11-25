@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-08 09:30
+// @Update       XdpCs 2023-11-25 21:13
 
 import (
 	"context"
@@ -816,6 +816,90 @@ func (c *Caller) VideoGeneratingInfo(ctx context.Context, keys []string) (WujieC
 			getTraceID(resp), err, vResp.Message)
 	}
 	return code, &vResp.Data, nil
+}
+
+// CameraTemplateOptions get camera template options
+func (c *Caller) CameraTemplateOptions(ctx context.Context) (WujieCode, []CameraTemplateOption, error) {
+	resp, err := c.Client.CameraTemplateOptions(ctx)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CameraTemplateOptions: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CameraTemplateOptionsResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, cResp.Message)
+	}
+	return code, cResp.Data, nil
+}
+
+// CreateCamera create camera
+func (c *Caller) CreateCamera(ctx context.Context, cReq *CreateCameraRequest) (WujieCode, *CreateCameraResult, error) {
+	resp, err := c.Client.CreateCamera(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateCamera: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateCameraResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateCameraRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data, nil
+}
+
+// CameraGeneratingInfo get camera generating info
+func (c *Caller) CameraGeneratingInfo(ctx context.Context, keys []string) (WujieCode, []CameraGeneratingInfo, error) {
+	resp, err := c.Client.CameraGeneratingInfo(ctx, keys)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CameraGeneratingInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CameraGeneratingInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, cResp.Message)
+	}
+	return code, cResp.Data.Infos, nil
+}
+
+// CameraInfo get camera info
+func (c *Caller) CameraInfo(ctx context.Context, key string) (WujieCode, *CameraInfo, error) {
+	resp, err := c.Client.CameraInfo(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CameraInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CameraInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, cResp.Message, key)
+	}
+	return code, &cResp.Data, nil
 }
 
 func getTraceID(resp *http.Response) string {

@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-08 09:30
+// @Update       XdpCs 2023-11-25 21:13
 
 import (
 	"bytes"
@@ -830,6 +830,61 @@ func (c *Client) VideoGeneratingInfo(ctx context.Context, keys []string) (*http.
 	resp, err := c.CtxPostJson(ctx, path.String(), nil, keys)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", keys, err)
+	}
+	return resp, nil
+}
+
+// CameraTemplateOptions get camera template options
+func (c *Client) CameraTemplateOptions(ctx context.Context) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CameraTemplateOptionsWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CameraTemplateOptionsWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: error: %w", err)
+	}
+	return resp, nil
+}
+
+// CreateCamera create camera
+func (c *Client) CreateCamera(ctx context.Context, cReq *CreateCameraRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateCameraWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateCameraWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// CameraGeneratingInfo get camera generating info
+func (c *Client) CameraGeneratingInfo(ctx context.Context, keys []string) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CameraGeneratingInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CameraGeneratingInfoWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, keys)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", keys, err)
+	}
+	return resp, nil
+}
+
+// CameraInfo get camera info
+func (c *Client) CameraInfo(ctx context.Context, key string) (*http.Response, error) {
+	values := url.Values{
+		"key": []string{key},
+	}
+	path, err := url.Parse(Domain + string(CameraInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CameraInfoWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: req: %v, error: %w", key, err)
 	}
 	return resp, nil
 }
