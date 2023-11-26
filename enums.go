@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        enums.go
 // @Description  enums
 // @Create       XdpCs 2023-10-17 20:48
-// @Update       XdpCs 2023-10-23 15:08
+// @Update       XdpCs 2023-11-26 15:08
 
 // PromptSubmitType prompt submit type /ai/optimize/prompt/submit
 type PromptSubmitType int8
@@ -51,14 +51,37 @@ const (
 type SuperSizeType string
 
 const (
-	GeneralSuperSizeType = "GENERAL"
-	AnimeSuperSizeType   = "ANIME"
+	GeneralSuperSizeType SuperSizeType = "GENERAL"
+	AnimeSuperSizeType   SuperSizeType = "ANIME"
 )
 
 // SuperSizeCostType super size cost type /ai/supersize
 type SuperSizeCostType string
 
 const (
-	IntegralSuperSizeCostType = "INTEGRAL"
-	DurationSuperSizeCostType = "DURATION"
+	IntegralSuperSizeCostType SuperSizeCostType = "INTEGRAL"
+	DurationSuperSizeCostType SuperSizeCostType = "DURATION"
+)
+
+// LabOptionType lab option type /ai/pro/lab/options
+type LabOptionType string
+
+const (
+	InfiniteZoomModelLabOptionType    LabOptionType = "INFINITE_ZOOM_MODEL"
+	InfiniteZoomSamplerLabOptionType  LabOptionType = "INFINITE_ZOOM_SAMPLER"
+	SegmentAnythingModelLabOptionType LabOptionType = "SEGMENT_ANYTHING_MODEL"
+	VectorStudioStyleLabOptionType    LabOptionType = "VECTOR_STUDIO_STYLE"
+)
+
+// LabInfoType lab info type /ai/pro/lab/info
+type LabInfoType string
+
+const (
+	InfiniteZoomLabInfoType LabInfoType = "AI_LAB_INFINITE_ZOOM"
+	SegmentationLabInfoType LabInfoType = "AI_LAB_SEGMENTATION"
+	MjDescribeLabInfoType   LabInfoType = "MJ_DESCRIBE"
+	PictureLabInfoType      LabInfoType = "PICTURE"
+	SuperSizeLabInfoType    LabInfoType = "SUPER_SIZE"
+	VectorLabInfoType       LabInfoType = "VECTOR"
+	VideoLabInfoType        LabInfoType = "VIDEO"
 )

@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        entity.go
 // @Description  entity
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-25 21:13
+// @Update       XdpCs 2023-11-26 15:13
 
 import (
 	"fmt"
@@ -1453,4 +1453,264 @@ type CameraInfo struct {
 		FailCode    int    `json:"fail_code"`
 		FailMessage string `json:"fail_message"`
 	} `json:"fail_message"`
+}
+
+type LabOptionsRequest struct {
+	Input *struct {
+		OptionType LabOptionType `json:"optionType"`
+	} `json:"input"`
+}
+
+func (l *LabOptionsRequest) String() string {
+	return fmt.Sprintf("%+v", *l)
+}
+
+type LabOptionsResponse struct {
+	BaseResponse
+	Data struct {
+		AiLabQuery struct {
+			Options []LabOption `json:"options"`
+		} `json:"aiLabQuery"`
+	} `json:"data"`
+}
+
+type LabOption struct {
+	Code int    `json:"code"`
+	Name string `json:"name"`
+}
+
+type LabInfoRequest struct {
+	ServiceKey string      `json:"serviceKey"`
+	AiType     LabInfoType `json:"aiType"`
+}
+
+func (l *LabInfoRequest) String() string {
+	return fmt.Sprintf("%+v", *l)
+}
+
+type LabInfoResponse struct {
+	BaseResponse
+	Data LabInfo `json:"data"`
+}
+
+type LabInfo struct {
+	AiType           string      `json:"aiType"`
+	ServiceKey       string      `json:"serviceKey"`
+	CheckIsViolation int         `json:"checkIsViolation"`
+	CompletePercent  int         `json:"completePercent"`
+	FailMessage      interface{} `json:"failMessage"`
+	Status           string      `json:"status"`
+	SegmentInfo      struct {
+		ImageUrl       string   `json:"imageUrl"`
+		ModelCode      int      `json:"modelCode"`
+		ModelName      string   `json:"modelName"`
+		NegativePoints []string `json:"negativePoints"`
+		PositivePoints []struct {
+			X int `json:"x"`
+			Y int `json:"y"`
+		} `json:"positivePoints"`
+		Prompt    interface{} `json:"prompt"`
+		Threshold int         `json:"threshold"`
+		ImageUrls []string    `json:"imageUrls"`
+	} `json:"segmentInfo"`
+	InfiniteZoomInfo struct {
+		InitImageUrl                string `json:"initImageUrl"`
+		ExitImageUrl                string `json:"exitImageUrl"`
+		ModelCode                   int    `json:"modelCode"`
+		ModelName                   string `json:"modelName"`
+		VideoSecond                 int    `json:"videoSecond"`
+		VideoFrameRate              int    `json:"videoFrameRate"`
+		VideoZoomMode               int    `json:"videoZoomMode"`
+		VideoStartFreezeFrameNumber int    `json:"videoStartFreezeFrameNumber"`
+		VideoEndFreezeFrameNumber   int    `json:"videoEndFreezeFrameNumber"`
+		MaskFeathering              int    `json:"maskFeathering"`
+		MovementSpeed               int    `json:"movementSpeed"`
+		Cfg                         int    `json:"cfg"`
+		PromptPrefix                string `json:"promptPrefix"`
+		PromptSuffix                string `json:"promptSuffix"`
+		UcPrompt                    string `json:"ucPrompt"`
+		Fps                         []struct {
+			Second int    `json:"second"`
+			Prompt string `json:"prompt"`
+		} `json:"fps"`
+		Sampler     int    `json:"sampler"`
+		SamplerName string `json:"samplerName"`
+		Creativity  int    `json:"creativity"`
+		ImageSeed   int    `json:"imageSeed"`
+		ImageWidth  int    `json:"imageWidth"`
+		ImageHeight int    `json:"imageHeight"`
+		VideoUrl    string `json:"videoUrl"`
+	} `json:"infiniteZoomInfo"`
+	VectorInfo struct {
+		MiniArtWorkUrl    string      `json:"miniArtWorkUrl"`
+		Vectorization     bool        `json:"vectorization"`
+		Style             int         `json:"style"`
+		StyleName         string      `json:"styleName"`
+		Threshold         int         `json:"threshold"`
+		WhiteOpaque       bool        `json:"whiteOpaque"`
+		WhiteMarginFormat bool        `json:"whiteMarginFormat"`
+		TransparentPNG    bool        `json:"transparentPNG"`
+		NoiseTolerance    int         `json:"noiseTolerance"`
+		Quantize          int         `json:"quantize"`
+		AiArtworkId       interface{} `json:"aiArtworkId"`
+		VectorRes         []struct {
+			Url      string `json:"url"`
+			ShowName string `json:"showName"`
+			Type     string `json:"type"`
+		} `json:"vectorRes"`
+	} `json:"vectorInfo"`
+}
+
+type CreateSegmentationRequest struct {
+	Input *CreateSegmentationInput `json:"input"`
+}
+
+type CreateSegmentationInput struct {
+	ImageUrl      string `json:"imageUrl"`
+	ImageUrlParam struct {
+		Key string `json:"key"`
+		Url string `json:"url"`
+	} `json:"imageUrlParam"`
+	ImageUrls      []string `json:"imageUrls"`
+	ModelCode      int      `json:"modelCode"`
+	NegativePoints []struct {
+		X struct {
+		} `json:"x"`
+		Y struct {
+		} `json:"y"`
+	} `json:"negativePoints"`
+	NotifyUrl      string `json:"notifyUrl"`
+	PositivePoints []struct {
+		X struct {
+		} `json:"x"`
+		Y struct {
+		} `json:"y"`
+	} `json:"positivePoints"`
+	Prompt    string `json:"prompt"`
+	Threshold int    `json:"threshold"`
+}
+
+func (c *CreateSegmentationRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateSegmentationResponse struct {
+	BaseResponse
+	Data struct {
+		AiLabMutation struct {
+			SegmentAnythingCreateV2 CreateSegmentationResult `json:"segmentAnythingCreateV2"`
+		} `json:"aiLabMutation"`
+	} `json:"data"`
+}
+
+type CreateSegmentationResult struct {
+	AiType string `json:"aiType"`
+	Key    string `json:"key"`
+}
+
+type CreateInfiniteZoomInput struct {
+	Cfg               int    `json:"cfg"`
+	Creativity        int    `json:"creativity"`
+	ExitImageUrl      string `json:"exitImageUrl"`
+	ExitImageUrlParam struct {
+		Key string `json:"key"`
+		Url string `json:"url"`
+	} `json:"exitImageUrlParam"`
+	Fps []struct {
+		Prompt string `json:"prompt"`
+		Second int    `json:"second"`
+	} `json:"fps"`
+	ImageHeight       int    `json:"imageHeight"`
+	ImageSeed         uint   `json:"imageSeed"`
+	ImageWidth        int    `json:"imageWidth"`
+	InitImageUrl      string `json:"initImageUrl"`
+	InitImageUrlParam struct {
+		Key string `json:"key"`
+		Url string `json:"url"`
+	} `json:"initImageUrlParam"`
+	MaskFeathering              int    `json:"maskFeathering"`
+	ModelCode                   int    `json:"modelCode"`
+	MovementSpeed               int    `json:"movementSpeed"`
+	NotifyUrl                   string `json:"notifyUrl"`
+	PromptPrefix                string `json:"promptPrefix"`
+	PromptSuffix                string `json:"promptSuffix"`
+	Sampler                     int    `json:"sampler"`
+	UcPrompt                    string `json:"ucPrompt"`
+	VideoEndFreezeFrameNumber   int    `json:"videoEndFreezeFrameNumber"`
+	VideoFrameRate              int    `json:"videoFrameRate"`
+	VideoSecond                 int    `json:"videoSecond"`
+	VideoStartFreezeFrameNumber int    `json:"videoStartFreezeFrameNumber"`
+	VideoUrl                    string `json:"videoUrl"`
+	VideoZoomMode               int    `json:"videoZoomMode"`
+}
+
+func (c *CreateInfiniteZoomInput) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateInfiniteZoomRequest struct {
+	Input *CreateInfiniteZoomInput `json:"input"`
+}
+
+func (c *CreateInfiniteZoomRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateInfiniteZoomResponse struct {
+	BaseResponse
+	Data struct {
+		AiLabMutation struct {
+			InfiniteZoomCreateV2 CreateInfiniteZoomResult `json:"infiniteZoomCreateV2"`
+		} `json:"aiLabMutation"`
+	} `json:"data"`
+}
+
+type CreateInfiniteZoomResult struct {
+	Key    string `json:"key"`
+	AiType string `json:"aiType"`
+}
+
+type CreateVectorStudioInput struct {
+	Height         int    `json:"height"`
+	InitImage      string `json:"initImage"`
+	InitImageParam struct {
+		Key string `json:"key"`
+		Url string `json:"url"`
+	} `json:"initImageParam"`
+	NoiseTolerance int    `json:"noiseTolerance"`
+	NotifyUrl      string `json:"notifyUrl"`
+	Quantize       int    `json:"quantize"`
+	Style          int    `json:"style"`
+	Threshold      int    `json:"threshold"`
+	TransparentPNG bool   `json:"transparentPNG"`
+	VectorRes      []struct {
+		Type string `json:"type"`
+		Url  string `json:"url"`
+	} `json:"vectorRes"`
+	Vectorization     bool `json:"vectorization"`
+	WhiteMarginFormat bool `json:"whiteMarginFormat"`
+	WhiteOpaque       bool `json:"whiteOpaque"`
+	Width             int  `json:"width"`
+}
+
+type CreateVectorStudioRequest struct {
+	Input *CreateVectorStudioInput `json:"input"`
+}
+
+func (c *CreateVectorStudioRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateVectorStudioResponse struct {
+	BaseResponse
+	Data struct {
+		AiLabMutation struct {
+			VectorStudioCreateV2 CreateVectorStudioResult `json:"vectorStudioCreateV2"`
+		} `json:"aiLabMutation"`
+	} `json:"data"`
+}
+
+type CreateVectorStudioResult struct {
+	Key    string `json:"key"`
+	AiType string `json:"aiType"`
 }
