@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-25 21:13
+// @Update       XdpCs 2023-11-26 15:13
 
 import (
 	"context"
@@ -900,6 +900,111 @@ func (c *Caller) CameraInfo(ctx context.Context, key string) (WujieCode, *Camera
 			getTraceID(resp), err, cResp.Message, key)
 	}
 	return code, &cResp.Data, nil
+}
+
+// LabOptions get lab options
+func (c *Caller) LabOptions(ctx context.Context, lReq *LabOptionsRequest) (WujieCode, []LabOption, error) {
+	resp, err := c.Client.LabOptions(ctx, lReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.LabOptions: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var lResp LabOptionsResponse
+	if err := json.NewDecoder(resp.Body).Decode(&lResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(lResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, lResp.Message)
+	}
+	return code, lResp.Data.AiLabQuery.Options, nil
+}
+
+// LabInfo get lab info
+func (c *Caller) LabInfo(ctx context.Context, lReq *LabInfoRequest) (WujieCode, *LabInfo, error) {
+	resp, err := c.Client.LabInfo(ctx, lReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.LabInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var lResp LabInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&lResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(lResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s",
+			getTraceID(resp), err, lResp.Message)
+	}
+	return code, &lResp.Data, nil
+}
+
+// CreateSegmentation create segmentation
+func (c *Caller) CreateSegmentation(ctx context.Context, cReq *CreateSegmentationRequest) (WujieCode, *CreateSegmentationResult, error) {
+	resp, err := c.Client.CreateSegmentation(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateSegmentation: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateSegmentationResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateSegmentationRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data.AiLabMutation.SegmentAnythingCreateV2, nil
+}
+
+// CreateInfiniteZoom create infinite zoom
+func (c *Caller) CreateInfiniteZoom(ctx context.Context, cReq *CreateInfiniteZoomRequest) (WujieCode, *CreateInfiniteZoomResult, error) {
+	resp, err := c.Client.CreateInfiniteZoom(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateInfiniteZoom: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateInfiniteZoomResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateInfiniteZoomRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data.AiLabMutation.InfiniteZoomCreateV2, nil
+}
+
+// CreateVectorStudio create vector studio
+func (c *Caller) CreateVectorStudio(ctx context.Context, cReq *CreateVectorStudioRequest) (WujieCode, *CreateVectorStudioResult, error) {
+	resp, err := c.Client.CreateVectorStudio(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateVectorStudio: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateVectorStudioResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateVectorStudioRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp.Data.AiLabMutation.VectorStudioCreateV2, nil
 }
 
 func getTraceID(resp *http.Response) string {

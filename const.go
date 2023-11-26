@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        const.go
 // @Description  wujie sdk's const
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-25 21:13
+// @Update       XdpCs 2023-11-26 14:18
 
 import (
 	"fmt"
@@ -48,6 +48,11 @@ const (
 	ModelBaseInfosProWujieRouter      WujieRouter = "/ai/pro/model_base_infos"
 	ControlNetOptionProWujieRouter    WujieRouter = "/ai/pro/controlNetOption"
 	ImageInfoProWujieRouter           WujieRouter = "/ai/pro/info"
+	LabOptionsWujieRouter             WujieRouter = "/ai/pro/lab/options"
+	LabInfoWujieRouter                WujieRouter = "/ai/pro/lab/info"
+	CreateSegmentationWujieRouter     WujieRouter = "/ai/pro/lab/create/segmentation"
+	CreateInfiniteZoomWujieRouter     WujieRouter = "/ai/pro/lab/createInfiniteZoom"
+	CreateVectorStudioWujieRouter     WujieRouter = "/ai/pro/lab/createVectorsStudio"
 )
 
 // avatar create artwork WujieRouter

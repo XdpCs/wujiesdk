@@ -888,3 +888,68 @@ func (c *Client) CameraInfo(ctx context.Context, key string) (*http.Response, er
 	}
 	return resp, nil
 }
+
+// LabOptions get lab options
+func (c *Client) LabOptions(ctx context.Context, lReq *LabOptionsRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(LabOptionsWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(LabOptionsWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, lReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", lReq.String(), err)
+	}
+	return resp, nil
+}
+
+// LabInfo get lab info
+func (c *Client) LabInfo(ctx context.Context, lReq *LabInfoRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(LabInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(LabInfoWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, lReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", lReq.String(), err)
+	}
+	return resp, nil
+}
+
+// CreateSegmentation create segmentation
+func (c *Client) CreateSegmentation(ctx context.Context, cReq *CreateSegmentationRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateSegmentationWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateSegmentationWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// CreateInfiniteZoom create infinite zoom
+func (c *Client) CreateInfiniteZoom(ctx context.Context, cReq *CreateInfiniteZoomRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateInfiniteZoomWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateInfiniteZoomWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// CreateVectorStudio create vector studio
+func (c *Client) CreateVectorStudio(ctx context.Context, cReq *CreateVectorStudioRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateVectorStudioWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateVectorStudioWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
