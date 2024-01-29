@@ -1714,3 +1714,44 @@ type CreateVectorStudioResult struct {
 	Key    string `json:"key"`
 	AiType string `json:"aiType"`
 }
+
+type CreateSVDRequest struct {
+	InitImageUrl    string  `json:"init_image_url"`
+	Duration        int     `json:"duration"`
+	MotionAmplitude int     `json:"motion_amplitude"`
+	NoiseIntensity  float64 `json:"noise_intensity"`
+	RandomSeed      string  `json:"random_seed"`
+	ChargeType      int     `json:"charge_type"`
+	NotifyUrl       string  `json:"notify_url"`
+}
+
+func (c *CreateSVDRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateSVDResponse struct {
+	BaseResponse
+	Data struct {
+		Key string `json:"key"`
+	} `json:"data"`
+}
+
+type SVDInfoResponse struct {
+	BaseResponse
+	Data SVDInfo `json:"data"`
+}
+
+type SVDInfo struct {
+	Key             string  `json:"key"`
+	VideoUrl        string  `json:"video_url"`
+	InitImageUrl    string  `json:"init_image_url"`
+	Duration        int     `json:"duration"`
+	MotionAmplitude int     `json:"motion_amplitude"`
+	NoiseIntensity  float64 `json:"noise_intensity"`
+	RandomSeed      string  `json:"random_seed"`
+	Status          int     `json:"status"`
+	FailMessage     struct {
+		FailCode    int    `json:"fail_code"`
+		FailMessage string `json:"fail_message"`
+	} `json:"fail_message"`
+}
