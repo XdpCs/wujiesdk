@@ -86,6 +86,8 @@ require github.com/XdpCs/wujiesdk latest
         - [x] 实验室-模型列表
         - [x] Ai实验室详情
         - [x] 一镜到底
+        - [x] 生成图生视频
+        - [x] 生成图生视频详情查询
 
 ## 例子
 

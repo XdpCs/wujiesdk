@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        caller.go
 // @Description  handle wujie sdk's response
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-26 15:13
+// @Update       XdpCs 2024-01-29 14:18
 
 import (
 	"context"
@@ -1005,6 +1005,48 @@ func (c *Caller) CreateVectorStudio(ctx context.Context, cReq *CreateVectorStudi
 			getTraceID(resp), err, cResp.Message, cReq.String())
 	}
 	return code, &cResp.Data.AiLabMutation.VectorStudioCreateV2, nil
+}
+
+// CreateSVD creates svd
+func (c *Caller) CreateSVD(ctx context.Context, cReq *CreateSVDRequest) (WujieCode, string, error) {
+	resp, err := c.Client.CreateSVD(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("c.Client.CreateSVD: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateSVDResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, "", fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, "", fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateSVDRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, cResp.Data.Key, nil
+}
+
+// SVDInfo get svd info
+func (c *Caller) SVDInfo(ctx context.Context, key string) (WujieCode, *SVDInfo, error) {
+	resp, err := c.Client.SVDInfo(ctx, key)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.SVDInfo: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var sResp SVDInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&sResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(sResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, key: %s",
+			getTraceID(resp), err, sResp.Message, key)
+	}
+	return code, &sResp.Data, nil
 }
 
 func getTraceID(resp *http.Response) string {

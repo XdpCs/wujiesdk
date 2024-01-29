@@ -3,7 +3,7 @@ package wujiesdk
 // @Title        client.go
 // @Description  request wujie's api
 // @Create       XdpCs 2023-09-10 20:47
-// @Update       XdpCs 2023-11-25 21:13
+// @Update       XdpCs 2024-01-29 14:18
 
 import (
 	"bytes"
@@ -950,6 +950,35 @@ func (c *Client) CreateVectorStudio(ctx context.Context, cReq *CreateVectorStudi
 	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
 	if err != nil {
 		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// CreateSVD creates svd
+func (c *Client) CreateSVD(ctx context.Context, cReq *CreateSVDRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateSVDWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateSVDWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
+
+// SVDInfo get svd info
+func (c *Client) SVDInfo(ctx context.Context, key string) (*http.Response, error) {
+	values := url.Values{
+		"key": []string{key},
+	}
+	path, err := url.Parse(Domain + string(SVDInfoWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(SVDInfoWujieRouter), err)
+	}
+	resp, err := c.CtxGetJson(ctx, path.String(), values)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxGetJson: req: %v, error: %w", key, err)
 	}
 	return resp, nil
 }
