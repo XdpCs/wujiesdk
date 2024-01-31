@@ -1722,7 +1722,7 @@ type CreateSVDRequest struct {
 	NoiseIntensity  float64 `json:"noise_intensity"`
 	RandomSeed      string  `json:"random_seed"`
 	ChargeType      int     `json:"charge_type"`
-	NotifyUrl       string  `json:"notify_url"`
+	NotifyUrl       string  `json:"notify_url,omitempty"`
 }
 
 func (c *CreateSVDRequest) String() string {
