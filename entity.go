@@ -1718,10 +1718,10 @@ type CreateVectorStudioResult struct {
 type CreateSVDRequest struct {
 	InitImageUrl    string  `json:"init_image_url"`
 	Duration        int     `json:"duration"`
-	MotionAmplitude int     `json:"motion_amplitude"`
-	NoiseIntensity  float64 `json:"noise_intensity"`
-	RandomSeed      string  `json:"random_seed"`
-	ChargeType      int     `json:"charge_type"`
+	MotionAmplitude int     `json:"motion_amplitude,omitempty"`
+	NoiseIntensity  float64 `json:"noise_intensity,omitempty"`
+	RandomSeed      string  `json:"random_seed,omitempty"`
+	ChargeType      int     `json:"charge_type,omitempty"`
 	NotifyUrl       string  `json:"notify_url,omitempty"`
 }
 
