@@ -149,53 +149,67 @@ type DefaultResourceModelData struct {
 }
 
 type CreateImageRequest struct {
-	Model               int             `json:"model"`
-	Prompt              string          `json:"prompt"`
-	UcPrompt            string          `json:"uc_prompt,omitempty"`
-	FullyCustomUcPrompt bool            `json:"fully_custom_uc_prompt,omitempty"`
-	Num                 int             `json:"num"`
-	Width               int             `json:"width,omitempty"`
-	Height              int             `json:"height,omitempty"`
-	InitImageURL        string          `json:"init_image_url,omitempty"`
-	InitWidth           int             `json:"init_width,omitempty"`
-	InitHeight          int             `json:"init_height,omitempty"`
-	CreativityDegree    int             `json:"creativity_degree,omitempty"`
-	InitImageSimilarity int             `json:"init_image_similarity,omitempty"`
-	SuperSizeMultiple   float64         `json:"super_size_multiple,omitempty"`
-	PrefineMultiple     float64         `json:"prefine_multiple,omitempty"`
-	ImageType           []string        `json:"image_type,omitempty"`
-	Style               []string        `json:"style,omitempty"`
-	Artist              string          `json:"artist,omitempty"`
-	Artists             []string        `json:"artists,omitempty"`
-	ElementMagic        []string        `json:"element_magic,omitempty"`
-	StyleDecoration     []string        `json:"style_decoration,omitempty"`
-	ModelParam          string          `json:"model_param,omitempty"`
-	AccelerateTimes     int             `json:"accelerate_times,omitempty"`
-	Vendor              int             `json:"vendor,omitempty"`
-	Character           []string        `json:"character,omitempty"`
-	ModelFusion         []ModelFusion   `json:"model_fusion,omitempty"`
-	StyleModel          string          `json:"style_model,omitempty"`
-	Pattern             string          `json:"pattern,omitempty"`
-	PretreatmentMethod  string          `json:"pretreatment_method,omitempty"`
-	Steps               int             `json:"steps,omitempty"`
-	Cfg                 int             `json:"cfg,omitempty"`
-	SamplerIndex        int             `json:"sampler_index,omitempty"`
-	Seed                string          `json:"seed,omitempty"`
-	QueueType           int             `json:"queue_type,omitempty"`
-	CreateSource        int             `json:"create_source,omitempty"`
-	ClipSkip            int             `json:"clip_skip,omitempty"`
-	ControlWeight       int             `json:"control_weight,omitempty"`
-	ControlImg2Img      bool            `json:"control_img2_img,omitempty"`
-	ControlMode         int             `json:"control_mode,omitempty"`
-	DetectGrayNum       int             `json:"detect_gray_num,omitempty"`
-	NotifyURL           string          `json:"notify_url,omitempty"`
-	ServiceContext      *ServiceContext `json:"service_context,omitempty"`
-	MultiDiffusion      *MultiDiffusion `json:"multi_diffusion,omitempty"`
-	ServiceType         int             `json:"service_type,omitempty"`
-	Extra               string          `json:"extra,omitempty"`
-	ProMethod           string          `json:"pro_method,omitempty"`
+	Model                int             `json:"model"`
+	Prompt               string          `json:"prompt"`
+	UcPrompt             string          `json:"uc_prompt,omitempty"`
+	FullyCustomUcPrompt  bool            `json:"fully_custom_uc_prompt,omitempty"`
+	Num                  int             `json:"num"`
+	Width                int             `json:"width,omitempty"`
+	Height               int             `json:"height,omitempty"`
+	InitImageURL         string          `json:"init_image_url,omitempty"`
+	InitWidth            int             `json:"init_width,omitempty"`
+	InitHeight           int             `json:"init_height,omitempty"`
+	CreativityDegree     int             `json:"creativity_degree,omitempty"`
+	InitImageSimilarity  int             `json:"init_image_similarity,omitempty"`
+	SuperSizeMultiple    float64         `json:"super_size_multiple,omitempty"`
+	PrefineMultiple      float64         `json:"prefine_multiple,omitempty"`
+	ImageType            []string        `json:"image_type,omitempty"`
+	Style                []string        `json:"style,omitempty"`
+	Artist               string          `json:"artist,omitempty"`
+	Artists              []string        `json:"artists,omitempty"`
+	ElementMagic         []string        `json:"element_magic,omitempty"`
+	StyleDecoration      []string        `json:"style_decoration,omitempty"`
+	ModelParam           string          `json:"model_param,omitempty"`
+	AccelerateTimes      int             `json:"accelerate_times,omitempty"`
+	Vendor               int             `json:"vendor,omitempty"`
+	Character            []string        `json:"character,omitempty"`
+	ModelFusion          []ModelFusion   `json:"model_fusion,omitempty"`
+	StyleModel           string          `json:"style_model,omitempty"`
+	Pattern              string          `json:"pattern,omitempty"`
+	PretreatmentMethod   string          `json:"pretreatment_method,omitempty"`
+	Steps                int             `json:"steps,omitempty"`
+	Cfg                  int             `json:"cfg,omitempty"`
+	SamplerIndex         int             `json:"sampler_index,omitempty"`
+	Seed                 string          `json:"seed,omitempty"`
+	QueueType            int             `json:"queue_type,omitempty"`
+	CreateSource         int             `json:"create_source,omitempty"`
+	ClipSkip             int             `json:"clip_skip,omitempty"`
+	ControlWeight        int             `json:"control_weight,omitempty"`
+	ControlImg2Img       bool            `json:"control_img2_img,omitempty"`
+	ControlMode          int             `json:"control_mode,omitempty"`
+	DetectGrayNum        int             `json:"detect_gray_num,omitempty"`
+	NotifyURL            string          `json:"notify_url,omitempty"`
+	ServiceContext       *ServiceContext `json:"service_context,omitempty"`
+	MultiDiffusion       *MultiDiffusion `json:"multi_diffusion,omitempty"`
+	ServiceType          int             `json:"service_type,omitempty"`
+	Extra                string          `json:"extra,omitempty"`
+	ProMethod            string          `json:"pro_method,omitempty"`
+	HrSecondPassStrength float64         `json:"hr_second_pass_strength,omitempty"`
+	MjParam              *MjParam        `json:"mj_param,omitempty"`
 }
 
+type MjParam struct {
+	Chaos    int      `json:"chaos"`
+	Stylize  int      `json:"stylize"`
+	Quality  string   `json:"quality"`
+	Upbeta   bool     `json:"upbeta"`
+	Tile     bool     `json:"tile"`
+	SrefUrls []string `json:"sref_urls"`
+}
+
+func (m *MjParam) String() string {
+	return fmt.Sprintf("%+v", *m)
+}
 func (c *CreateImageRequest) String() string {
 	return fmt.Sprintf("%+v", *c)
 }
@@ -280,8 +294,46 @@ type CreateImageData struct {
 	Results []struct {
 		Key            string `json:"key"`
 		ExpectedSecond int    `json:"expected_second"`
+		BatchTaskKey   string `json:"batch_task_key"`
 	} `json:"results"`
 	ExpectedIntegralCost int `json:"expected_integral_cost"`
+}
+
+type CreateImageCallBackSuccessResp struct {
+	ArtworkUrl string `json:"artwork_url"`
+	AuditInfo  struct {
+		CheckFail       bool   `json:"check_fail"`
+		Hit             bool   `json:"hit"`
+		DataId          string `json:"data_id"`
+		TotalSuggestion string `json:"total_suggestion"`
+		ScanSceneDTOS   []struct {
+			Rate       float64 `json:"rate"`
+			Suggestion string  `json:"suggestion"`
+			Label      string  `json:"label"`
+			LabelDesc  string  `json:"label_desc"`
+			Scene      string  `json:"scene"`
+		} `json:"scan_scene_d_t_o_s"`
+		Url string `json:"url"`
+	} `json:"audit_info"`
+	CompleteTime        int    `json:"complete_time"`
+	IntegralCost        int    `json:"integral_cost"`
+	IntegralCostMessage string `json:"integral_cost_message"`
+	InvolveYellow       int    `json:"involve_yellow"`
+	CreateImageBaseCallBackResp
+}
+
+type CreateImageCallBackFailedResp struct {
+	FailMessage         string `json:"fail_message"`
+	IntegralCost        int    `json:"integral_cost"`
+	IntegralCostMessage string `json:"integral_cost_message"`
+	CreateImageBaseCallBackResp
+}
+
+type CreateImageBaseCallBackResp struct {
+	BatchTaskKey string `json:"batch_task_key"`
+	Code         int    `json:"code"`
+	Key          string `json:"key"`
+	Success      bool   `json:"success"`
 }
 
 type GeneratingInfoResponse struct {
