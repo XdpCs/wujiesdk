@@ -1,11 +1,14 @@
-## What type of PR is this
+## What type of PR is this?
 
-- [ ] Errata
+- [ ] API-change
 - [ ] BUG
 - [ ] Improvement
+- [ ] Documentation
 - [ ] Feature
+- [ ] Test and CI
+- [ ] Code Refactoring
 
-## Which issue(s) this PR fixes(Optional)
+## Which issue(s) this PR fixes
 
 issue #
 
