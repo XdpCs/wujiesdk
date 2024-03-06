@@ -91,6 +91,8 @@ require github.com/XdpCs/wujiesdk latest
 
 ## 例子
 
+### 正常使用模式
+
 ```go
 package main
 
@@ -114,4 +116,30 @@ func main() {
 	}
 }
 
+```
+
+### Debug模式
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/XdpCs/wujiesdk"
+)
+
+func main() {
+	c, err := wujiesdk.NewCredentials("appID", "PrivateKey")
+	if err != nil {
+		panic(err)
+	}
+
+	client := wujiesdk.NewDebugClient(c)
+	ca := wujiesdk.NewCaller(client)
+	_, _, err = ca.CancelImage(context.Background(), "2087C400944DF2D6B25BED29C910B1B8")
+	if err != nil {
+		panic(err)
+	}
+}
 ```

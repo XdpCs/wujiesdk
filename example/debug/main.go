@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	client := wujiesdk.NewDefaultClient(c)
+	client := wujiesdk.NewDebugClient(c)
 	ca := wujiesdk.NewCaller(client)
 	_, _, err = ca.CancelImage(context.Background(), "2087C400944DF2D6B25BED29C910B1B8")
 	if err != nil {
