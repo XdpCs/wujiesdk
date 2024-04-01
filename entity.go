@@ -217,6 +217,10 @@ type LayerDiffusion struct {
 	EndingStep float64 `json:"ending_step"`
 }
 
+func (l *LayerDiffusion) String() string {
+	return fmt.Sprintf("%+v", *l)
+}
+
 func (m *MjParam) String() string {
 	return fmt.Sprintf("%+v", *m)
 }
