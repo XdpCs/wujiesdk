@@ -196,6 +196,7 @@ type CreateImageRequest struct {
 	ProMethod            string          `json:"pro_method,omitempty"`
 	HrSecondPassStrength float64         `json:"hr_second_pass_strength,omitempty"`
 	MjParam              *MjParam        `json:"mj_param,omitempty"`
+	LayerDiffusion       *LayerDiffusion `json:"layer_diffusion,omitempty"`
 }
 
 type MjParam struct {
@@ -205,6 +206,19 @@ type MjParam struct {
 	Upbeta   bool     `json:"upbeta"`
 	Tile     bool     `json:"tile"`
 	SrefUrls []string `json:"sref_urls"`
+	Sw       int      `json:"sw"`
+	CrefUrls []string `json:"cref_urls"`
+	Cw       int      `json:"cw"`
+}
+
+type LayerDiffusion struct {
+	Method     int     `json:"method"`
+	Weight     float64 `json:"weight"`
+	EndingStep float64 `json:"ending_step"`
+}
+
+func (l *LayerDiffusion) String() string {
+	return fmt.Sprintf("%+v", *l)
 }
 
 func (m *MjParam) String() string {
