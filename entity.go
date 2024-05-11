@@ -128,7 +128,7 @@ type DefaultResourceModelData struct {
 			Key                  string   `json:"key"`
 			Name                 string   `json:"name"`
 			Category             string   `json:"category"`
-			RecommendedWeight    int      `json:"recommended_weight"`
+			RecommendedWeight    float64  `json:"recommended_weight"`
 			SupportModelVersions []string `json:"support_model_versions"`
 		} `json:"character"`
 		ModelFusion []struct {
