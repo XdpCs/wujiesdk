@@ -76,11 +76,11 @@ type DefaultResourceModelData struct {
 			Name string `json:"name"`
 		} `json:"prompt_tips"`
 		Resolution []struct {
-			Width              int   `json:"width"`
-			Height             int   `json:"height"`
-			SuperSizeMultiple  int   `json:"super_size_multiple"`
-			PrefineMultiples   []int `json:"prefine_multiples"`
-			SuperSizeMultiples []int `json:"super_size_multiples"`
+			Width              int       `json:"width"`
+			Height             int       `json:"height"`
+			SuperSizeMultiple  float64   `json:"super_size_multiple"`
+			PrefineMultiples   []float64 `json:"prefine_multiples"`
+			SuperSizeMultiples []float64 `json:"super_size_multiples"`
 			SuperSizeDetails   []struct {
 				Multiple      float64 `json:"multiple"`
 				IntegralPrice int     `json:"integral_price"`
@@ -97,7 +97,7 @@ type DefaultResourceModelData struct {
 			ResolutionList []struct {
 				Width             int     `json:"width"`
 				Height            int     `json:"height"`
-				SuperSizeMultiple int     `json:"super_size_multiple"`
+				SuperSizeMultiple float64 `json:"super_size_multiple"`
 				PrefineMultiples  float64 `json:"prefine_multiples"`
 				DisplayResolution string  `json:"display_resolution"`
 				Url               string  `json:"url"`
@@ -135,7 +135,7 @@ type DefaultResourceModelData struct {
 			Key                  string   `json:"key"`
 			Name                 string   `json:"name"`
 			Category             string   `json:"category"`
-			RecommendedWeight    int      `json:"recommended_weight"`
+			RecommendedWeight    float64  `json:"recommended_weight"`
 			SupportModelVersions []string `json:"support_model_versions"`
 		} `json:"model_fusion"`
 		Patterns []struct {
