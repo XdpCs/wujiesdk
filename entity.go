@@ -724,13 +724,13 @@ type QuerySpellData struct {
 }
 
 type CreateImageProRequest struct {
-	ModelCode         int    `json:"model_code"`
-	Prompt            string `json:"prompt"`
-	Width             int    `json:"width"`
-	Height            int    `json:"height"`
-	SupersizeMultiple int    `json:"supersize_multiple"`
-	PrefineMultiple   int    `json:"prefine_multiple"`
-	BatchCount        int    `json:"batch_count"`
+	ModelCode         int     `json:"model_code"`
+	Prompt            string  `json:"prompt"`
+	Width             int     `json:"width"`
+	Height            int     `json:"height"`
+	SupersizeMultiple float64 `json:"supersize_multiple"`
+	PrefineMultiple   float64 `json:"prefine_multiple"`
+	BatchCount        int     `json:"batch_count"`
 	OptionParam       struct {
 		ModelFusion []struct {
 			Key    string  `json:"key"`
