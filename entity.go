@@ -200,15 +200,15 @@ type CreateImageRequest struct {
 }
 
 type MjParam struct {
-	Chaos    int      `json:"chaos"`
-	Stylize  int      `json:"stylize"`
-	Quality  string   `json:"quality"`
-	Upbeta   bool     `json:"upbeta"`
-	Tile     bool     `json:"tile"`
-	SrefUrls []string `json:"sref_urls"`
-	Sw       int      `json:"sw"`
-	CrefUrls []string `json:"cref_urls"`
-	Cw       int      `json:"cw"`
+	Chaos    int      `json:"chaos,omitempty"`
+	Stylize  int      `json:"stylize,omitempty"`
+	Quality  string   `json:"quality,omitempty"`
+	Upbeta   bool     `json:"upbeta,omitempty"`
+	Tile     bool     `json:"tile,omitempty"`
+	SrefUrls []string `json:"sref_urls,omitempty"`
+	Sw       int      `json:"sw,omitempty"`
+	CrefUrls []string `json:"cref_urls,omitempty"`
+	Cw       int      `json:"cw,omitempty"`
 }
 
 type LayerDiffusion struct {
