@@ -96,6 +96,19 @@ const (
 	CameraInfoWujieRouter            WujieRouter = "/avatar/camera/info"
 )
 
+type CameraMoveType string
+
+// create svd camera move type
+const (
+	CameraDefault   CameraMoveType = "DEFAULT"
+	CameraMoveUp    CameraMoveType = "MOVE_UP"
+	CameraMoveDown  CameraMoveType = "MOVE_DOWN"
+	CameraMoveLeft  CameraMoveType = "MOVE_LEFT"
+	CameraMoveRight CameraMoveType = "MOVE_RIGHT"
+	CameraZoomIn    CameraMoveType = "MOVE_ZOOMIN"
+	CameraZoomOut   CameraMoveType = "MOVE_ZOOMOUT"
+)
+
 const DefaultExpiration = 4 * time.Minute
 const Domain string = "https://gate.wujiebantu.com/wj-open/v1"
 
