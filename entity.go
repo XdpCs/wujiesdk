@@ -1829,17 +1829,17 @@ type CreateMidjourneyRequest struct {
 	Model               int      `json:"model"`
 	Prompt              string   `json:"prompt"`
 	UcPrompt            string   `json:"uc_prompt"`
-	FullyCustomUcPrompt bool     `json:"fully_custom_uc_prompt"`
+	FullyCustomUcPrompt bool     `json:"fully_custom_uc_prompt,omitempty"`
 	Num                 int      `json:"num"`
 	Width               int      `json:"width"`
 	Height              int      `json:"height"`
-	InitImageUrl        string   `json:"init_image_url"`
-	InitWidth           int      `json:"init_width"`
-	InitHeight          int      `json:"init_height"`
-	CreativityDegree    int      `json:"creativity_degree"`
-	Seed                string   `json:"seed"`
-	Cfg                 float64  `json:"cfg"`
-	NotifyUrl           string   `json:"notify_url"`
+	InitImageUrl        string   `json:"init_image_url,omitempty"`
+	InitWidth           int      `json:"init_width,omitempty"`
+	InitHeight          int      `json:"init_height,omitempty"`
+	CreativityDegree    int      `json:"creativity_degree,omitempty"`
+	Seed                string   `json:"seed,omitempty"`
+	Cfg                 float64  `json:"cfg,omitempty"`
+	NotifyUrl           string   `json:"notify_url,omitempty"`
 }
 
 func (c *CreateMidjourneyRequest) String() string {
