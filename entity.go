@@ -1823,3 +1823,29 @@ type SVDInfo struct {
 		FailMessage string `json:"fail_message"`
 	} `json:"fail_message"`
 }
+
+type CreateMidjourneyRequest struct {
+	MjParam             *MjParam `json:"mj_param"`
+	Model               int      `json:"model"`
+	Prompt              string   `json:"prompt"`
+	UcPrompt            string   `json:"uc_prompt"`
+	FullyCustomUcPrompt bool     `json:"fully_custom_uc_prompt"`
+	Num                 int      `json:"num"`
+	Width               int      `json:"width"`
+	Height              int      `json:"height"`
+	InitImageUrl        string   `json:"init_image_url"`
+	InitWidth           int      `json:"init_width"`
+	InitHeight          int      `json:"init_height"`
+	CreativityDegree    int      `json:"creativity_degree"`
+	Seed                string   `json:"seed"`
+	Cfg                 float64  `json:"cfg"`
+	NotifyUrl           string   `json:"notify_url"`
+}
+
+func (c *CreateMidjourneyRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateMidjourneyResponse struct {
+	CreateImageResponse
+}

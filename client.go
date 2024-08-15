@@ -982,3 +982,16 @@ func (c *Client) SVDInfo(ctx context.Context, key string) (*http.Response, error
 	}
 	return resp, nil
 }
+
+// CreateMidjourney create midjourney image
+func (c *Client) CreateMidjourney(ctx context.Context, cReq *CreateMidjourneyRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateMidjourneyWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateMidjourneyWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}
