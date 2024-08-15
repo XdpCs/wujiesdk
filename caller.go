@@ -1049,6 +1049,27 @@ func (c *Caller) SVDInfo(ctx context.Context, key string) (WujieCode, *SVDInfo, 
 	return code, &sResp.Data, nil
 }
 
+// CreateMidjourney create midjourney image
+func (c *Caller) CreateMidjourney(ctx context.Context, cReq *CreateMidjourneyRequest) (WujieCode, *CreateMidjourneyResponse, error) {
+	resp, err := c.Client.CreateMidjourney(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateMidjourney: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateMidjourneyResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateMidjourneyRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp, nil
+}
+
 func getTraceID(resp *http.Response) string {
 	return resp.Header.Get(TraceID)
 }

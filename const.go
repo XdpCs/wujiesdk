@@ -39,6 +39,7 @@ const (
 	PromptOptimizeResultWujieRouter      WujieRouter = "/ai/optimize/prompt/result"
 	YouthifyWujieRouter                  WujieRouter = "/ai/youthify"
 	QuerySpellWujieRouter                WujieRouter = "/ai/spell"
+	CreateMidjourneyWujieRouter          WujieRouter = "/ai/create/midjourney"
 )
 
 // pro ai WujieRouter
