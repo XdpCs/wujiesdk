@@ -1849,3 +1849,34 @@ func (c *CreateMidjourneyRequest) String() string {
 type CreateMidjourneyResponse struct {
 	CreateImageResponse
 }
+
+type CreateFluxRequest struct {
+	Model            int            `json:"model"`
+	Prompt           string         `json:"prompt"`
+	Num              int            `json:"num"`
+	Width            int            `json:"width"`
+	Height           int            `json:"height"`
+	InitImageUrl     string         `json:"init_image_url"`
+	InitWidth        int            `json:"init_width"`
+	InitHeight       int            `json:"init_height"`
+	CreativityDegree int            `json:"creativity_degree"`
+	ImageType        []string       `json:"image_type"`
+	Style            []string       `json:"style"`
+	Artists          []string       `json:"artists"`
+	ElementMagic     []string       `json:"element_magic"`
+	StyleDecoration  []string       `json:"style_decoration"`
+	AccelerateTimes  int            `json:"accelerate_times"`
+	ModelFusion      []*ModelFusion `json:"model_fusion"`
+	Cfg              float64        `json:"cfg"`
+	Seed             string         `json:"seed"`
+	CreateSource     int            `json:"create_source"`
+	NotifyUrl        string         `json:"notify_url"`
+}
+
+func (c *CreateFluxRequest) String() string {
+	return fmt.Sprintf("%+v", *c)
+}
+
+type CreateFluxResponse struct {
+	CreateImageResponse
+}
