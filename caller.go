@@ -1070,6 +1070,27 @@ func (c *Caller) CreateMidjourney(ctx context.Context, cReq *CreateMidjourneyReq
 	return code, &cResp, nil
 }
 
+// CreateFlux create flux image
+func (c *Caller) CreateFlux(ctx context.Context, cReq *CreateFluxRequest) (WujieCode, *CreateFluxResponse, error) {
+	resp, err := c.Client.CreateFlux(ctx, cReq)
+	if err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("c.Client.CreateFlux: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var cResp CreateFluxResponse
+	if err := json.NewDecoder(resp.Body).Decode(&cResp); err != nil {
+		return ErrorWujieCode, nil, fmt.Errorf("json.NewDecoder: %w", err)
+	}
+
+	code := WujieCode(cResp.Code)
+	if err := code.Err(); err != nil {
+		return code, nil, fmt.Errorf("TRACE_ID: %s, WujieCode: %w, Message: %s, CreateFluxRequest: %s",
+			getTraceID(resp), err, cResp.Message, cReq.String())
+	}
+	return code, &cResp, nil
+}
+
 func getTraceID(resp *http.Response) string {
 	return resp.Header.Get(TraceID)
 }

@@ -995,3 +995,16 @@ func (c *Client) CreateMidjourney(ctx context.Context, cReq *CreateMidjourneyReq
 	}
 	return resp, nil
 }
+
+// CreateFlux create flux image
+func (c *Client) CreateFlux(ctx context.Context, cReq *CreateFluxRequest) (*http.Response, error) {
+	path, err := url.Parse(Domain + string(CreateFluxWujieRouter))
+	if err != nil {
+		return nil, fmt.Errorf("url.Parse: url: %v, parse url error: %w", Domain+string(CreateFluxWujieRouter), err)
+	}
+	resp, err := c.CtxPostJson(ctx, path.String(), nil, cReq)
+	if err != nil {
+		return nil, fmt.Errorf("c.CtxPostJson: req: %v, error: %w", cReq.String(), err)
+	}
+	return resp, nil
+}

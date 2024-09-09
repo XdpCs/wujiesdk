@@ -40,6 +40,7 @@ const (
 	YouthifyWujieRouter                  WujieRouter = "/ai/youthify"
 	QuerySpellWujieRouter                WujieRouter = "/ai/spell"
 	CreateMidjourneyWujieRouter          WujieRouter = "/ai/create/midjourney"
+	CreateFluxWujieRouter                WujieRouter = "/ai/create/flux"
 )
 
 // pro ai WujieRouter
