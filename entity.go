@@ -1854,23 +1854,23 @@ type CreateFluxRequest struct {
 	Model            int            `json:"model"`
 	Prompt           string         `json:"prompt"`
 	Num              int            `json:"num"`
-	Width            int            `json:"width"`
-	Height           int            `json:"height"`
-	InitImageUrl     string         `json:"init_image_url"`
-	InitWidth        int            `json:"init_width"`
-	InitHeight       int            `json:"init_height"`
-	CreativityDegree int            `json:"creativity_degree"`
-	ImageType        []string       `json:"image_type"`
-	Style            []string       `json:"style"`
-	Artists          []string       `json:"artists"`
-	ElementMagic     []string       `json:"element_magic"`
-	StyleDecoration  []string       `json:"style_decoration"`
+	Width            int            `json:"width,omitempty"`
+	Height           int            `json:"height,omitempty"`
+	InitImageUrl     string         `json:"init_image_url,omitempty"`
+	InitWidth        int            `json:"init_width,omitempty"`
+	InitHeight       int            `json:"init_height,omitempty"`
+	CreativityDegree int            `json:"creativity_degree,omitempty"`
+	ImageType        []string       `json:"image_type,omitempty"`
+	Style            []string       `json:"style,omitempty"`
+	Artists          []string       `json:"artists,omitempty"`
+	ElementMagic     []string       `json:"element_magic,omitempty"`
+	StyleDecoration  []string       `json:"style_decoration,omitempty"`
 	AccelerateTimes  int            `json:"accelerate_times"`
-	ModelFusion      []*ModelFusion `json:"model_fusion"`
-	Cfg              float64        `json:"cfg"`
-	Seed             string         `json:"seed"`
-	CreateSource     int            `json:"create_source"`
-	NotifyUrl        string         `json:"notify_url"`
+	ModelFusion      []*ModelFusion `json:"model_fusion,omitempty"`
+	Cfg              float64        `json:"cfg,omitempty"`
+	Seed             string         `json:"seed,omitempty"`
+	CreateSource     int            `json:"create_source,omitempty"`
+	NotifyUrl        string         `json:"notify_url,omitempty"`
 }
 
 func (c *CreateFluxRequest) String() string {
